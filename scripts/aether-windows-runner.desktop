@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=AetherOS Windows App Runner
+Comment=Execute Windows .exe and .msi applications on AetherOS
+Exec=/usr/local/bin/aether-windows-runner %f
+Icon=system-run
+Terminal=false
+Categories=System;Utility;
+MimeType=application/x-ms-dos-executable;application/x-msi;application/x-msdownload;
+NoDisplay=false

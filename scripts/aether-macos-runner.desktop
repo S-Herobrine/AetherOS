@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=AetherOS macOS App Runner
+Comment=Execute macOS .dmg, .app, and Mach-O applications on AetherOS
+Exec=/usr/local/bin/aether-macos-runner %f
+Icon=system-run
+Terminal=false
+Categories=System;Utility;
+MimeType=application/x-apple-diskimage;application/x-mach-binary;
+NoDisplay=false

@@ -48,16 +48,16 @@ mkdir -p "/tmp/iso-download/${EDITION}"
 
 # 3. Fetch latest built ISO from GitHub Actions
 echo "==> Downloading latest ${ARTIFACT_NAME} from GitHub Actions..."
-gh run download -R S-Herobrine/ApexOS --name "${ARTIFACT_NAME}" --dir "/tmp/iso-download/${EDITION}" 2>/dev/null || {
+gh run download -R S-Herobrine/AetherOS --name "${ARTIFACT_NAME}" --dir "/tmp/iso-download/${EDITION}" 2>/dev/null || {
     echo "==> Downloading by latest run ID..."
-    RUN_ID=$(gh run list -R S-Herobrine/ApexOS -L 5 --json databaseId --jq '.[0].databaseId')
-    gh run download "${RUN_ID}" -R S-Herobrine/ApexOS --name "${ARTIFACT_NAME}" --dir "/tmp/iso-download/${EDITION}" 2>/dev/null || true
+    RUN_ID=$(gh run list -R S-Herobrine/AetherOS -L 5 --json databaseId --jq '.[0].databaseId')
+    gh run download "${RUN_ID}" -R S-Herobrine/AetherOS --name "${ARTIFACT_NAME}" --dir "/tmp/iso-download/${EDITION}" 2>/dev/null || true
 }
 
 if [ -z "$(find "/tmp/iso-download/${EDITION}" -name "*.iso" 2>/dev/null | head -n1)" ]; then
     ALT_NAME="${ARTIFACT_NAME/AetherOS/ApexOS}"
     echo "==> Checking fallback artifact ${ALT_NAME}..."
-    gh run download -R S-Herobrine/ApexOS --name "${ALT_NAME}" --dir "/tmp/iso-download/${EDITION}" 2>/dev/null || true
+    gh run download -R S-Herobrine/AetherOS --name "${ALT_NAME}" --dir "/tmp/iso-download/${EDITION}" 2>/dev/null || true
 fi
 
 ISO_PATH=$(find "/tmp/iso-download/${EDITION}" -name "*.iso" | head -n1)

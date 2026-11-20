@@ -1,7 +1,7 @@
-# ApexOS Unified Multi-Edition Build Automation Makefile
+# AetherOS Unified Multi-Edition Build Automation Makefile
 
 SHELL := /bin/bash
-PROJECT_NAME := ApexOS
+PROJECT_NAME := AetherOS
 VERSION := 1.0
 ARCH := amd64
 OUTPUT_DIR := build/output
@@ -14,12 +14,12 @@ all: help
 
 help:
 	@echo "=================================================================="
-	@echo "                   ApexOS Build System                           "
+	@echo "                   AetherOS Build System                           "
 	@echo "=================================================================="
 	@echo "Available build targets:"
 	@echo "  make install-deps    - Install build tools (debootstrap, xorriso, etc.)"
-	@echo "  make build-lowend    - Build ApexOS Low-End ISO (4GB RAM, <2GB ISO)"
-	@echo "  make build-standard  - Build ApexOS Standard ISO (8GB+ RAM, Full App Suite)"
+	@echo "  make build-lowend    - Build AetherOS Low-End ISO (4GB RAM, <2GB ISO)"
+	@echo "  make build-standard  - Build AetherOS Standard ISO (8GB+ RAM, Full App Suite)"
 	@echo "  make build-all       - Build BOTH Low-End and Standard ISOs"
 	@echo "  make test-lowend     - Boot Low-End ISO in QEMU (4GB RAM emulation)"
 	@echo "  make test-standard   - Boot Standard ISO in QEMU (8GB RAM emulation)"
@@ -34,15 +34,15 @@ install-deps:
 		isolinux syslinux-utils git make curl wget gnupg zram-tools
 
 build-lowend:
-	@echo "==> Building ApexOS Low-End Edition ISO..."
+	@echo "==> Building AetherOS Low-End Edition ISO..."
 	sudo bash build/build-iso-lowend.sh
 
 build-standard:
-	@echo "==> Building ApexOS Standard Edition ISO..."
+	@echo "==> Building AetherOS Standard Edition ISO..."
 	sudo bash build/build-iso-standard.sh
 
 build-all: build-lowend build-standard
-	@echo "==> Both ApexOS ISO editions built successfully!"
+	@echo "==> Both AetherOS ISO editions built successfully!"
 
 test-lowend:
 	@if [ ! -f $(OUTPUT_DIR)/$(ISO_LOWEND) ]; then \

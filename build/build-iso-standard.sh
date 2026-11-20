@@ -117,7 +117,13 @@ apt-get install -y --no-install-recommends \
     gimp \
     firefox \
     calamares \
-    zenity
+    zenity \
+    wine \
+    winetricks \
+    dmg2img \
+    p7zip-full \
+    hfsprogs \
+    zram-tools
 
 # 1. Configure initramfs-tools explicitly for Casper Live Boot and generic hardware
 mkdir -p /etc/initramfs-tools
@@ -314,7 +320,16 @@ fi
 if [ -d "${WORKSPACE_ROOT}/scripts" ]; then
     cp "${WORKSPACE_ROOT}/scripts/"*.sh "${BUILD_DIR}/usr/local/bin/" 2>/dev/null || true
     cp "${WORKSPACE_ROOT}/scripts/"*.py "${BUILD_DIR}/usr/local/bin/" 2>/dev/null || true
+    cp "${WORKSPACE_ROOT}/scripts/"*.desktop "${BUILD_DIR}/usr/share/applications/" 2>/dev/null || true
     chmod +x "${BUILD_DIR}/usr/local/bin/"* 2>/dev/null || true
+fi
+
+# Copy branding assets
+mkdir -p "${BUILD_DIR}/usr/share/pixmaps"
+if [ -d "${WORKSPACE_ROOT}/branding" ]; then
+    cp "${WORKSPACE_ROOT}/branding/logo.png" "${BUILD_DIR}/usr/share/pixmaps/aether-logo.png" 2>/dev/null || true
+    cp "${WORKSPACE_ROOT}/branding/logo-icon.png" "${BUILD_DIR}/usr/share/pixmaps/aether-icon.png" 2>/dev/null || true
+    cp "${WORKSPACE_ROOT}/branding/logo-wordmark.png" "${BUILD_DIR}/usr/share/pixmaps/aether-wordmark.png" 2>/dev/null || true
 fi
 
 # Inject GNOME Shell extension
