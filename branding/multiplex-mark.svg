@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="markGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00F5FF"/>
+      <stop offset="60%" stop-color="#6366F1"/>
+      <stop offset="100%" stop-color="#8B5CF6"/>
+    </linearGradient>
+
+    <linearGradient id="markGrad2" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#F43F5E"/>
+      <stop offset="50%" stop-color="#D946EF"/>
+      <stop offset="100%" stop-color="#6366F1"/>
+    </linearGradient>
+
+    <linearGradient id="markSheen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.9"/>
+      <stop offset="40%" stop-color="#FFFFFF" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+
+    <filter id="markBloom" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="12" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Outer Multiplex "M" Stream -->
+  <path d="M 124 376 L 124 160 C 124 136, 154 122, 172 138 L 256 216 L 340 138 C 358 122, 388 136, 388 160 L 388 376" 
+        fill="none" 
+        stroke="url(#markGrad1)" 
+        stroke-width="42" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+        filter="url(#markBloom)"/>
+
+  <!-- Lower Multiplex Convergent Fold -->
+  <path d="M 172 376 L 256 296 L 340 376" 
+        fill="none" 
+        stroke="url(#markGrad2)" 
+        stroke-width="38" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"/>
+
+  <!-- Core Refractive Multiplex Prism -->
+  <polygon points="256,160 292,204 256,248 220,204" 
+           fill="url(#markGrad2)" 
+           filter="url(#markBloom)"/>
+
+  <polygon points="256,160 292,204 256,248 220,204" 
+           fill="url(#markSheen)"/>
+
+  <!-- Specular Sheen Stroke -->
+  <path d="M 134 166 L 172 138 L 220 182" 
+        fill="none" 
+        stroke="url(#markSheen)" 
+        stroke-width="10" 
+        stroke-linecap="round"/>
+
+  <!-- 3 Subsystem Nodes (Linux, Android, Windows) -->
+  <circle cx="124" cy="376" r="12" fill="#00F5FF" filter="url(#markBloom)"/>
+  <circle cx="124" cy="376" r="5" fill="#FFFFFF"/>
+
+  <circle cx="256" cy="296" r="12" fill="#D946EF" filter="url(#markBloom)"/>
+  <circle cx="256" cy="296" r="5" fill="#FFFFFF"/>
+
+  <circle cx="388" cy="376" r="12" fill="#F43F5E" filter="url(#markBloom)"/>
+  <circle cx="388" cy="376" r="5" fill="#FFFFFF"/>
+</svg>

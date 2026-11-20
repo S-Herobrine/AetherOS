@@ -1,21 +1,21 @@
 #!/bin/bash
 # ==============================================================================
-# ApexOS Cloud ISO Web Runner
+# AetherOS Cloud ISO Web Runner
 # Runs inside GitHub Codespaces (100% in your browser - zero local download)
 # ==============================================================================
 
 set -euo pipefail
 
 echo "=========================================================="
-echo "    ApexOS Cloud ISO Browser Runner (Zero Local Download)"
+echo "    AetherOS Cloud ISO Browser Runner (Zero Local Download)"
 echo "=========================================================="
 
 EDITION="${1:-}"
 
 if [ -z "$EDITION" ]; then
     echo "There are 2 ISO editions available. Which one do you want to test?"
-    echo "  1) ApexOS Standard Edition (Full App Suite - Recommended)"
-    echo "  2) ApexOS Low-End Edition (< 2GB, 4GB RAM optimized)"
+    echo "  1) AetherOS Standard Edition (Full App Suite - Recommended)"
+    echo "  2) AetherOS Low-End Edition (< 2GB, 4GB RAM optimized)"
     read -rp "Enter choice [1 or 2, default is 1]: " CHOICE
     if [ "$CHOICE" = "2" ] || [ "$CHOICE" = "lowend" ]; then
         EDITION="lowend"
@@ -25,15 +25,15 @@ if [ -z "$EDITION" ]; then
 fi
 
 if [ "$EDITION" = "standard" ] || [ "$EDITION" = "1" ]; then
-    ARTIFACT_NAME="ApexOS-1.0-Standard-amd64-iso"
+    ARTIFACT_NAME="AetherOS-1.0-Standard-amd64-iso"
     ISO_PATTERN="*Standard*.iso"
     EDITION="standard"
-    echo "==> Selected: ApexOS Standard Edition"
+    echo "==> Selected: AetherOS Standard Edition"
 else
-    ARTIFACT_NAME="ApexOS-1.0-LowEnd-amd64-iso"
+    ARTIFACT_NAME="AetherOS-1.0-LowEnd-amd64-iso"
     ISO_PATTERN="*LowEnd*.iso"
     EDITION="lowend"
-    echo "==> Selected: ApexOS Low-End Edition"
+    echo "==> Selected: AetherOS Low-End Edition"
 fi
 
 # 1. Install QEMU and noVNC web viewer
@@ -48,11 +48,17 @@ mkdir -p "/tmp/iso-download/${EDITION}"
 
 # 3. Fetch latest built ISO from GitHub Actions
 echo "==> Downloading latest ${ARTIFACT_NAME} from GitHub Actions..."
-gh run download -R S-Herobrine/ApexOS --name "${ARTIFACT_NAME}" --dir "/tmp/iso-download/${EDITION}" || {
+gh run download -R S-Herobrine/ApexOS --name "${ARTIFACT_NAME}" --dir "/tmp/iso-download/${EDITION}" 2>/dev/null || {
     echo "==> Downloading by latest run ID..."
     RUN_ID=$(gh run list -R S-Herobrine/ApexOS -L 5 --json databaseId --jq '.[0].databaseId')
-    gh run download "${RUN_ID}" -R S-Herobrine/ApexOS --name "${ARTIFACT_NAME}" --dir "/tmp/iso-download/${EDITION}"
+    gh run download "${RUN_ID}" -R S-Herobrine/ApexOS --name "${ARTIFACT_NAME}" --dir "/tmp/iso-download/${EDITION}" 2>/dev/null || true
 }
+
+if [ -z "$(find "/tmp/iso-download/${EDITION}" -name "*.iso" 2>/dev/null | head -n1)" ]; then
+    ALT_NAME="${ARTIFACT_NAME/AetherOS/ApexOS}"
+    echo "==> Checking fallback artifact ${ALT_NAME}..."
+    gh run download -R S-Herobrine/ApexOS --name "${ALT_NAME}" --dir "/tmp/iso-download/${EDITION}" 2>/dev/null || true
+fi
 
 ISO_PATH=$(find "/tmp/iso-download/${EDITION}" -name "*.iso" | head -n1)
 
@@ -84,11 +90,11 @@ else
 fi
 
 # 7. Create virtual drive for installer testing
-rm -f /tmp/apexos-virtual-drive.qcow2
-qemu-img create -f qcow2 /tmp/apexos-virtual-drive.qcow2 10G
+rm -f /tmp/AetherOS-virtual-drive.qcow2
+qemu-img create -f qcow2 /tmp/AetherOS-virtual-drive.qcow2 10G
 
 echo "=========================================================="
-echo "  APEXOS ${EDITION^^} IS STARTING!"
+echo "  AetherOS ${EDITION^^} IS STARTING!"
 echo "  Open Port 6080 in your browser to view the screen."
 echo "  Boot log will stream in the terminal below."
 echo "=========================================================="
@@ -104,5 +110,5 @@ exec qemu-system-x86_64 \
     -serial mon:stdio \
     -vnc 127.0.0.1:0 \
     -cdrom "${ISO_PATH}" \
-    -hda /tmp/apexos-virtual-drive.qcow2 \
+    -hda /tmp/AetherOS-virtual-drive.qcow2 \
     -boot d

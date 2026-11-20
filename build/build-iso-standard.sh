@@ -1,19 +1,19 @@
 #!/bin/bash
 # ==============================================================================
-# ApexOS Standard Edition ISO Builder (Full App & Multimedia Suite)
+# ApexOS / AetherOS Standard Edition ISO Builder (Full App & Multimedia Suite)
 # Optimized for reliable Live Boot on Physical PCs & Virtual Machines (QEMU/KVM)
 # ==============================================================================
 
 set -euo pipefail
 
-DIST_NAME="ApexOS"
+DIST_NAME="AetherOS"
 DIST_VERSION="1.0"
 DIST_EDITION="Standard"
 ARCH="amd64"
 CODENAME="noble"
 
 WORKSPACE_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-WORK_DIR="/tmp/apexos-build-std"
+WORK_DIR="/tmp/aetheros-build-std"
 BUILD_DIR="${WORK_DIR}/chroot"
 ISO_DIR="${WORK_DIR}/iso"
 OUTPUT_DIR="${WORKSPACE_ROOT}/build/output"
@@ -159,23 +159,23 @@ locale-gen en_US.UTF-8
 update-locale LANG=en_US.UTF-8
 echo "apexos" > /etc/hostname
 
-# 5. Pre-create live user 'apex' with password 'apex', nopasswdlogin, and passwordless sudo
+# 5. Pre-create live users 'apex' and 'aether' with nopasswdlogin and passwordless sudo
 for g in sudo adm audio video plugdev netdev cdrom dip nopasswdlogin; do
     groupadd -f -r "$g" 2>/dev/null || true
 done
-if ! id -u apex &>/dev/null; then
-    useradd -m -s /bin/bash -G sudo,adm,audio,video,plugdev,netdev,cdrom,dip,nopasswdlogin apex 2>/dev/null || useradd -m -s /bin/bash apex
-    echo "apex:apex" | chpasswd
-    echo "root:apexos" | chpasswd
-    mkdir -p /etc/sudoers.d
-    echo "apex ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/apex
-    chmod 0440 /etc/sudoers.d/apex
-else
-    usermod -aG nopasswdlogin,sudo,adm,audio,video,plugdev,netdev,cdrom,dip apex 2>/dev/null || true
-fi
-
-mkdir -p /home/apex/.config /home/apex/Desktop
-chown -R apex:apex /home/apex
+for u in apex aether; do
+    if ! id -u "$u" &>/dev/null; then
+        useradd -m -s /bin/bash -G sudo,adm,audio,video,plugdev,netdev,cdrom,dip,nopasswdlogin "$u" 2>/dev/null || useradd -m -s /bin/bash "$u"
+        echo "${u}:${u}" | chpasswd
+        mkdir -p /etc/sudoers.d
+        echo "${u} ALL=(ALL) NOPASSWD: ALL" > "/etc/sudoers.d/${u}"
+        chmod 0440 "/etc/sudoers.d/${u}"
+    else
+        usermod -aG nopasswdlogin,sudo,adm,audio,video,plugdev,netdev,cdrom,dip "$u" 2>/dev/null || true
+    fi
+    mkdir -p "/home/${u}/.config" "/home/${u}/Desktop"
+    chown -R "${u}:${u}" "/home/${u}"
+done
 
 # Ensure PAM permits instant autologin for live session
 if [ -f /etc/pam.d/gdm-autologin ]; then
@@ -207,12 +207,14 @@ ln -sf /usr/share/xsessions/gnome-xorg.desktop /usr/share/xsessions/ubuntu.deskt
 ln -sf /usr/share/xsessions/gnome-xorg.desktop /usr/share/xsessions/ubuntu-xorg.desktop 2>/dev/null || true
 
 # User .xsession fallback
-cat << 'XSESSION_USER' > /home/apex/.xsession
+for u in apex aether; do
+    cat << 'XSESSION_USER' > "/home/${u}/.xsession"
 #!/bin/sh
 exec gnome-session
 XSESSION_USER
-chmod +x /home/apex/.xsession
-chown apex:apex /home/apex/.xsession
+    chmod +x "/home/${u}/.xsession"
+    chown "${u}:${u}" "/home/${u}/.xsession"
+done
 
 # 6. Configure LightDM (Primary Display Manager for instant live desktop autologin)
 mkdir -p /etc/lightdm/lightdm.conf.d
@@ -226,6 +228,9 @@ xserver-command=X -core -noreset
 LIGHTDM_EOF
 
 echo "/usr/sbin/lightdm" > /etc/X11/default-display-manager
+mkdir -p /etc/systemd/system
+ln -sf /lib/systemd/system/lightdm.service /etc/systemd/system/display-manager.service
+ln -sf /lib/systemd/system/graphical.target /etc/systemd/system/default.target
 systemctl disable gdm3 2>/dev/null || true
 systemctl enable lightdm 2>/dev/null || true
 
@@ -393,13 +398,13 @@ if loadfont /boot/grub/font.pf2 ; then
     terminal_output gfxterm
 fi
 
-menuentry "Start ApexOS 1.0 (Standard Edition)" {
+menuentry "Start AetherOS 1.0 (Standard Edition)" {
     set gfxpayload=keep
     linux /casper/vmlinuz boot=casper username=apex hostname=apexos rw ignore_uuid noprompt console=tty0 console=ttyS0 systemd.show_status=1 ---
     initrd /casper/initrd
 }
 
-menuentry "Start ApexOS 1.0 (Safe Graphics / Compatibility Mode)" {
+menuentry "Start AetherOS 1.0 (Safe Graphics / Compatibility Mode)" {
     set gfxpayload=keep
     linux /casper/vmlinuz boot=casper username=apex hostname=apexos rw ignore_uuid nomodeset noprompt console=tty0 console=ttyS0 systemd.show_status=1 ---
     initrd /casper/initrd
@@ -408,17 +413,17 @@ EOF
 
 # Package bootable ISO with grub-mkrescue (supports both UEFI and Legacy BIOS)
 grub-mkrescue -o "${OUTPUT_DIR}/${ISO_NAME}" "${ISO_DIR}" \
-    -- -volid "ApexOS_1_0_Std" 2>/dev/null || \
+    -- -volid "AetherOS_1_0_Std" 2>/dev/null || \
 xorriso -as mkisofs \
     -iso-level 3 \
     -full-iso9660-filenames \
-    -volid "ApexOS_1_0_Std" \
+    -volid "AetherOS_1_0_Std" \
     -output "${OUTPUT_DIR}/${ISO_NAME}" \
     "${ISO_DIR}"
 
 rm -rf "${WORK_DIR}"
 
 echo "======================================================================"
-echo "  Standard Edition ISO Build Complete!"
+echo "  AetherOS Standard Edition ISO Build Complete!"
 echo "  Output: ${OUTPUT_DIR}/${ISO_NAME}"
 echo "======================================================================"

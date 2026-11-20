@@ -1,7 +1,7 @@
-# ApexOS (Low-End PC Edition)
+# AetherOS (Low-End PC Edition)
 
 <p align="center">
-  <img src="branding/logo.svg" alt="ApexOS Logo" width="140" height="140">
+  <img src="branding/logo-wordmark.png" alt="AetherOS Logo" width="140" height="140">
 </p>
 
 <h3 align="center">
@@ -16,16 +16,16 @@
 
 ---
 
-## ⚡ What is ApexOS?
+## ⚡ What is AetherOS?
 
-**ApexOS** (formerly SatanOS/SatasOS) combines the best capabilities of three distinct software universes into a single, cohesive, ultra-lightweight operating system:
+**AetherOS** (formerly SatanOS/SatasOS) combines the best capabilities of three distinct software universes into a single, cohesive, ultra-lightweight operating system:
 
 1. **Windows 11 Experience**:
    - Centered fluent taskbar with live running indicators, thumbnail previews, and system tray.
    - Acrylic/flat Start Menu with universal search (apps, files, Android APKs, web).
-   - **ApexOS Files** (Explorer) featuring familiar `C:\` and `D:\` drive paths and dual-pane navigation.
+   - **AetherOS Files** (Explorer) featuring familiar `C:\` and `D:\` drive paths and dual-pane navigation.
    - Windows 11 window snapping (`Super + Arrow Keys`).
-   - Personalization tools: **ApexOS Tweaks** (Windhawk-style) & **ApexOS Widgets** (Rainmeter-style).
+   - Personalization tools: **AetherOS Tweaks** (Windhawk-style) & **AetherOS Widgets** (Rainmeter-style).
 
 2. **Android 14 Experience**:
    - Native containerized Android subsystem powered by **Waydroid** with GPU acceleration.
@@ -44,9 +44,9 @@
 
 ## 🚀 Low-End PC Special Optimizations
 
-ApexOS is meticulously engineered to run smoothly on budget laptops and older desktops with **4 GB RAM** and **14–16 GB of storage**:
+AetherOS is meticulously engineered to run smoothly on budget laptops and older desktops with **4 GB RAM** and **14–16 GB of storage**:
 
-| Feature | Standard OS (Ubuntu/Win11) | ApexOS Low-End Edition |
+| Feature | Standard OS (Ubuntu/Win11) | AetherOS Low-End Edition |
 |---|---|---|
 | **Idle RAM Consumption** | 1,500 MB – 2,800 MB | **~380 MB – 450 MB** |
 | **Usable Free RAM on 4GB** | Less than 1.5 GB | **Over 3.5 GB free for apps** |
@@ -67,11 +67,11 @@ During setup via the Calamares installer, you can choose your preferred browser:
 - **Opera** (Built-in free VPN & sidebar messengers)
 
 ### Key Pre-Installed Applications:
-- **Android Subsystem**: Google Play Store, Play Services, ApexOS Android Manager, APK Installer.
-- **Productivity**: LibreOffice Suite (Writer, Calc, Impress), ApexOS Files, PDF Viewer.
+- **Android Subsystem**: Google Play Store, Play Services, AetherOS Android Manager, APK Installer.
+- **Productivity**: LibreOffice Suite (Writer, Calc, Impress), AetherOS Files, PDF Viewer.
 - **Creativity & Media**: VLC Media Player, GIMP Photo Retouching, Amberol Audio Player.
 - **Development**: Visual Studio Code, GNOME Terminal, Tilix Tiling Shell, Git, Python 3, Node.js.
-- **Customization**: ApexOS Widgets (Rainmeter-like), ApexOS Tweaks (Windhawk-like), Dark/Light Theme Switcher.
+- **Customization**: AetherOS Widgets (Rainmeter-like), AetherOS Tweaks (Windhawk-like), Dark/Light Theme Switcher.
 
 ---
 
@@ -93,8 +93,8 @@ The build system is designed to build inside modest resources:
 
 ```bash
 # Clone the repository
-git clone https://github.com/ApexOS/ApexOS.git
-cd ApexOS
+git clone https://github.com/AetherOS/AetherOS.git
+cd AetherOS
 
 # Install minimal build dependencies
 sudo make install-deps
@@ -105,11 +105,11 @@ sudo bash build/build-iso-lowend.sh
 
 Output:
 ```
-build/output/ApexOS-1.0-lowend-amd64.iso (approx. 1.9 GB)
+build/output/AetherOS-1.0-lowend-amd64.iso (approx. 1.9 GB)
 ```
 
 ---
 
 ## 📄 License
 
-ApexOS is free software licensed under the **GNU General Public License v3 (GPL-3.0)**.
+AetherOS is free software licensed under the **GNU General Public License v3 (GPL-3.0)**.

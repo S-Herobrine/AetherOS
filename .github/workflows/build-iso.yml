@@ -1,4 +1,4 @@
-name: Build ApexOS ISOs
+name: Build AetherOS ISOs
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       edition:
-        description: 'Which ApexOS Edition to build'
+        description: 'Which AetherOS Edition to build'
         required: true
         default: 'both'
         type: choice
@@ -17,7 +17,7 @@ on:
 
 jobs:
   build-lowend:
-    name: Build ApexOS Low-End Edition (< 2GB ISO / 4GB RAM)
+    name: Build AetherOS Low-End Edition (< 2GB ISO / 4GB RAM)
     if: github.event_name == 'push' || github.event.inputs.edition == 'lowend' || github.event.inputs.edition == 'both'
     runs-on: ubuntu-latest
     timeout-minutes: 60
@@ -48,12 +48,12 @@ jobs:
       - name: Upload Low-End ISO Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ApexOS-1.0-LowEnd-amd64-iso
+          name: AetherOS-1.0-LowEnd-amd64-iso
           path: build/output/*.iso
           retention-days: 14
 
   build-standard:
-    name: Build ApexOS Standard Edition (Full Apps)
+    name: Build AetherOS Standard Edition (Full Apps)
     if: github.event_name == 'push' || github.event.inputs.edition == 'standard' || github.event.inputs.edition == 'both'
     runs-on: ubuntu-latest
     timeout-minutes: 90
@@ -84,6 +84,6 @@ jobs:
       - name: Upload Standard ISO Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ApexOS-1.0-Standard-amd64-iso
+          name: AetherOS-1.0-Standard-amd64-iso
           path: build/output/*.iso
           retention-days: 14
