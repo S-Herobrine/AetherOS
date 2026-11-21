@@ -288,6 +288,14 @@ chmod 0600 /var/lib/AccountsService/users/apex
 # Mask GNOME session failed screen so minor startup hiccups never trigger the white screen
 systemctl --global mask gnome-session-failed.service 2>/dev/null || true
 
+# FlowOS 4-Second Instant Fast Boot Optimization
+systemctl mask systemd-networkd-wait-online.service 2>/dev/null || true
+systemctl mask NetworkManager-wait-online.service 2>/dev/null || true
+systemctl mask ModemManager.service 2>/dev/null || true
+systemctl mask snapd.service snapd.socket snapd.seeded.service 2>/dev/null || true
+systemctl mask plymouth-quit-wait.service 2>/dev/null || true
+systemctl mask apport.service 2>/dev/null || true
+
 # Set ApexOS dark theme, wallpaper, and disable screen blanking
 mkdir -p /etc/dconf/db/local.d
 mkdir -p /etc/dconf/profile
@@ -445,13 +453,13 @@ fi
 
 menuentry "Start AetherOS 1.0 (Low-End Edition - 4GB RAM)" {
     set gfxpayload=keep
-    linux /casper/vmlinuz boot=casper username=apex hostname=apexos rw ignore_uuid noprompt console=tty0 console=ttyS0 systemd.show_status=1 ---
+    linux /casper/vmlinuz boot=casper username=apex hostname=aetheros rw ignore_uuid noprompt quiet fastboot loglevel=3 fsck.mode=skip systemd.show_status=auto console=tty0 console=ttyS0 ---
     initrd /casper/initrd
 }
 
 menuentry "Start AetherOS 1.0 (Safe Graphics / Compatibility Mode)" {
     set gfxpayload=keep
-    linux /casper/vmlinuz boot=casper username=apex hostname=apexos rw ignore_uuid nomodeset noprompt console=tty0 console=ttyS0 systemd.show_status=1 ---
+    linux /casper/vmlinuz boot=casper username=apex hostname=aetheros rw ignore_uuid nomodeset noprompt quiet fastboot loglevel=3 fsck.mode=skip console=tty0 console=ttyS0 ---
     initrd /casper/initrd
 }
 EOF
