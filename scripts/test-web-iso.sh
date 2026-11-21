@@ -12,29 +12,10 @@ echo "=========================================================="
 
 EDITION="${1:-}"
 
-if [ -z "$EDITION" ]; then
-    echo "There are 2 ISO editions available. Which one do you want to test?"
-    echo "  1) AetherOS Standard Edition (Full App Suite - Recommended)"
-    echo "  2) AetherOS Low-End Edition (< 2GB, 4GB RAM optimized)"
-    read -rp "Enter choice [1 or 2, default is 1]: " CHOICE
-    if [ "$CHOICE" = "2" ] || [ "$CHOICE" = "lowend" ]; then
-        EDITION="lowend"
-    else
-        EDITION="standard"
-    fi
-fi
-
-if [ "$EDITION" = "standard" ] || [ "$EDITION" = "1" ]; then
-    ARTIFACT_NAME="AetherOS-1.0-Standard-amd64-iso"
-    ISO_PATTERN="*Standard*.iso"
-    EDITION="standard"
-    echo "==> Selected: AetherOS Standard Edition"
-else
-    ARTIFACT_NAME="AetherOS-1.0-LowEnd-amd64-iso"
-    ISO_PATTERN="*LowEnd*.iso"
-    EDITION="lowend"
-    echo "==> Selected: AetherOS Low-End Edition"
-fi
+EDITION="standard"
+ARTIFACT_NAME="AetherOS-1.0-Standard-amd64-iso"
+ISO_PATTERN="*.iso"
+echo "==> Selected: AetherOS Unified Edition (128MB RAM - Full Desktop)"
 
 # 1. Install QEMU and noVNC web viewer
 sudo apt-get update -qq

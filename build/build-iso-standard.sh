@@ -126,7 +126,11 @@ apt-get install -y --no-install-recommends \
     dmg2img \
     p7zip-full \
     hfsprogs \
-    zram-tools
+    zram-tools \
+    openbox \
+    tint2 \
+    picom \
+    feh
 
 # 1. Configure initramfs-tools explicitly for Casper Live Boot and generic hardware
 mkdir -p /etc/initramfs-tools
@@ -215,10 +219,23 @@ ln -sf /usr/share/xsessions/gnome-xorg.desktop /usr/share/xsessions/gnome.deskto
 ln -sf /usr/share/xsessions/gnome-xorg.desktop /usr/share/xsessions/ubuntu.desktop 2>/dev/null || true
 ln -sf /usr/share/xsessions/gnome-xorg.desktop /usr/share/xsessions/ubuntu-xorg.desktop 2>/dev/null || true
 
-# User .xsession fallback (Guarantees D-Bus and GNOME session start)
+# User .xsession fallback (Adaptive: 128MB RAM mode vs Full GNOME mode)
 for u in apex aether; do
     cat << 'XSESSION_USER' > "/home/${u}/.xsession"
 #!/bin/sh
+TOTAL_RAM_MB=$(free -m 2>/dev/null | awk '/^Mem:/{print $2}' || echo 2048)
+
+# Ultra-Low RAM Mode (< 800MB RAM, down to 128MB RAM):
+# Launches ultra-lean Liquid Glass Openbox session (~70MB idle RAM)
+if [ "$TOTAL_RAM_MB" -lt 800 ] && command -v openbox-session >/dev/null 2>&1; then
+    export XDG_CURRENT_DESKTOP=AetherOS
+    feh --bg-fill /usr/share/backgrounds/apexos/*.jpg 2>/dev/null || xsetroot -solid "#12132D" 2>/dev/null || true
+    picom -b 2>/dev/null || true
+    tint2 2>/dev/null &
+    exec openbox-session
+fi
+
+# Standard Mode (>= 800MB RAM): Full GNOME Liquid Glass Desktop
 export XDG_CURRENT_DESKTOP=GNOME
 export XDG_SESSION_DESKTOP=gnome
 export GNOME_SHELL_SESSION_MODE=ubuntu

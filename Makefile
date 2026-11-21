@@ -1,28 +1,26 @@
-# AetherOS Unified Multi-Edition Build Automation Makefile
+# AetherOS Unified Edition Build Automation Makefile
+# Minimum Requirements: 128 MB RAM, 1 GB Storage
 
 SHELL := /bin/bash
 PROJECT_NAME := AetherOS
 VERSION := 1.0
 ARCH := amd64
 OUTPUT_DIR := build/output
-ISO_LOWEND := $(PROJECT_NAME)-$(VERSION)-LowEnd-$(ARCH).iso
-ISO_STANDARD := $(PROJECT_NAME)-$(VERSION)-Standard-$(ARCH).iso
+ISO_NAME := $(PROJECT_NAME)-$(VERSION)-Standard-$(ARCH).iso
 
-.PHONY: all clean install-deps build-lowend build-standard build-all test-lowend test-standard help
+.PHONY: all clean install-deps build test help
 
 all: help
 
 help:
 	@echo "=================================================================="
-	@echo "                   AetherOS Build System                           "
+	@echo "            AetherOS Unified OS Build System                      "
+	@echo "         Minimum: 128 MB RAM | 1 GB Storage                       "
 	@echo "=================================================================="
 	@echo "Available build targets:"
 	@echo "  make install-deps    - Install build tools (debootstrap, xorriso, etc.)"
-	@echo "  make build-lowend    - Build AetherOS Low-End ISO (4GB RAM, <2GB ISO)"
-	@echo "  make build-standard  - Build AetherOS Standard ISO (8GB+ RAM, Full App Suite)"
-	@echo "  make build-all       - Build BOTH Low-End and Standard ISOs"
-	@echo "  make test-lowend     - Boot Low-End ISO in QEMU (4GB RAM emulation)"
-	@echo "  make test-standard   - Boot Standard ISO in QEMU (8GB RAM emulation)"
+	@echo "  make build           - Build Unified AetherOS ISO (~20 mins)"
+	@echo "  make test            - Launch QEMU web test with multi-core acceleration"
 	@echo "  make clean           - Remove temporary build chroots and caches"
 	@echo "=================================================================="
 
@@ -31,36 +29,18 @@ install-deps:
 	sudo apt update && sudo apt install -y \
 		live-build debootstrap xorriso squashfs-tools \
 		mtools dosfstools grub-pc-bin grub-efi-amd64-bin \
-		isolinux syslinux-utils git make curl wget gnupg zram-tools
+		isolinux syslinux-utils git make curl wget gnupg zram-tools zstd
 
-build-lowend:
-	@echo "==> Building AetherOS Low-End Edition ISO..."
-	sudo bash build/build-iso-lowend.sh
-
-build-standard:
-	@echo "==> Building AetherOS Standard Edition ISO..."
+build:
+	@echo "==> Building AetherOS Unified Edition ISO..."
 	sudo bash build/build-iso-standard.sh
 
-build-all: build-lowend build-standard
-	@echo "==> Both AetherOS ISO editions built successfully!"
-
-test-lowend:
-	@if [ ! -f $(OUTPUT_DIR)/$(ISO_LOWEND) ]; then \
-		echo "Error: ISO not found at $(OUTPUT_DIR)/$(ISO_LOWEND). Run 'make build-lowend' first."; \
-		exit 1; \
-	fi
-	@echo "==> Emulating Low-End PC: 4GB RAM, 2 cores..."
-	qemu-system-x86_64 -enable-kvm -m 4096 -smp 2 -vga virtio -display gtk,gl=on -cdrom $(OUTPUT_DIR)/$(ISO_LOWEND) -boot d
-
-test-standard:
-	@if [ ! -f $(OUTPUT_DIR)/$(ISO_STANDARD) ]; then \
-		echo "Error: ISO not found at $(OUTPUT_DIR)/$(ISO_STANDARD). Run 'make build-standard' first."; \
-		exit 1; \
-	fi
-	@echo "==> Emulating Standard PC: 8GB RAM, 4 cores..."
-	qemu-system-x86_64 -enable-kvm -m 8192 -smp 4 -vga virtio -display gtk,gl=on -cdrom $(OUTPUT_DIR)/$(ISO_STANDARD) -boot d
+test:
+	@echo "==> Testing AetherOS in QEMU Web Bridge..."
+	bash scripts/test-web-iso.sh
 
 clean:
-	@echo "==> Cleaning temporary build files..."
-	sudo rm -rf build/chroot-lowend build/chroot-standard build/iso build/iso-standard
+	@echo "==> Cleaning temporary build directories..."
+	sudo rm -rf /tmp/aetheros-build-*
+	rm -rf $(OUTPUT_DIR)/*
 	@echo "==> Clean complete."
