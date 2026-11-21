@@ -104,6 +104,9 @@ apt-get install -y --no-install-recommends \
     zram-tools \
     mutter \
     gnome-session \
+    ubuntu-session \
+    dbus-user-session \
+    at-spi2-core \
     gnome-shell \
     gnome-settings-daemon \
     libgl1-mesa-dri \
@@ -223,11 +226,19 @@ ln -sf /usr/share/xsessions/gnome-xorg.desktop /usr/share/xsessions/gnome.deskto
 ln -sf /usr/share/xsessions/gnome-xorg.desktop /usr/share/xsessions/ubuntu.desktop 2>/dev/null || true
 ln -sf /usr/share/xsessions/gnome-xorg.desktop /usr/share/xsessions/ubuntu-xorg.desktop 2>/dev/null || true
 
-# User .xsession fallback
+# User .xsession fallback (Guarantees D-Bus and GNOME session start)
 for u in apex aether; do
     cat << 'XSESSION_USER' > "/home/${u}/.xsession"
 #!/bin/sh
-exec gnome-session
+export XDG_CURRENT_DESKTOP=GNOME
+export XDG_SESSION_DESKTOP=gnome
+export GNOME_SHELL_SESSION_MODE=ubuntu
+export DESKTOP_SESSION=gnome
+if command -v dbus-run-session >/dev/null 2>&1; then
+    exec dbus-run-session -- gnome-session --session=ubuntu || exec dbus-run-session -- gnome-session
+else
+    exec gnome-session --session=ubuntu || exec gnome-session
+fi
 XSESSION_USER
     chmod +x "/home/${u}/.xsession"
     chown "${u}:${u}" "/home/${u}/.xsession"
