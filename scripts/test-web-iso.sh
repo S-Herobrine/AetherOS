@@ -80,13 +80,13 @@ sleep 1
 echo "==> Starting web display bridge on port 6080..."
 websockify -D --web=/usr/share/novnc/ 6080 127.0.0.1:5900
 
-# 6. Check CPU virtualization support
-CPU_FLAGS="-cpu max"
+# 6. Check CPU virtualization support & high-speed multi-threaded emulation
+CPU_FLAGS="-accel tcg,thread=multi -cpu max"
 if [ -e /dev/kvm ] && [ -r /dev/kvm ] && [ -w /dev/kvm ]; then
     CPU_FLAGS="-enable-kvm -cpu host"
     echo "==> Hardware KVM acceleration enabled!"
 else
-    echo "==> Emulating modern x86_64 CPU with -cpu max..."
+    echo "==> Multi-threaded CPU acceleration enabled (4 threads)!"
 fi
 
 # 7. Create virtual drive for installer testing
@@ -99,12 +99,16 @@ echo "  Open Port 6080 in your browser to view the screen."
 echo "  Boot log will stream in the terminal below."
 echo "=========================================================="
 
-# 8. Launch QEMU with serial console logging directly into terminal
+# Detect available host CPU cores and memory
+HOST_CORES=$(nproc 2>/dev/null || echo 2)
+QEMU_SMP=$(( HOST_CORES > 2 ? 4 : HOST_CORES ))
+
+# 8. Launch QEMU with multi-threading and virtio high-speed GPU
 exec qemu-system-x86_64 \
     ${CPU_FLAGS} \
-    -m 2048 \
-    -smp 2 \
-    -vga std \
+    -m 3584 \
+    -smp "${QEMU_SMP}" \
+    -vga virtio \
     -usb \
     -device usb-tablet \
     -serial mon:stdio \
