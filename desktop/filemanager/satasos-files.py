@@ -11,7 +11,7 @@ gi.require_version('Gdk', '4.0')
 gi.require_version('GdkPixbuf', '2.0')
 gi.require_version('Pango', '1.0')
 
-from gi.repository import Gtk, Gdk, Gio, GLib, GdkPixbuf, Pango
+from gi.repository import Gtk, Gdk, Gio, GLib, GObject, GdkPixbuf, Pango
 import os
 import sys
 import time
@@ -302,7 +302,7 @@ def get_icon_name_for_file(filepath, is_dir):
 # FileItem GObject - model entry
 # ---------------------------------------------------------------------------
 
-class FileItem(GLib.Object):
+class FileItem(GObject.Object):
     """Represents a single file system entry in the model."""
 
     def __init__(self, filepath, name=None):
