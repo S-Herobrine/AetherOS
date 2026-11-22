@@ -130,7 +130,10 @@ apt-get install -y --no-install-recommends \
     openbox \
     tint2 \
     picom \
-    feh
+    feh \
+    plymouth \
+    plymouth-themes \
+    plymouth-label
 
 # 1. Configure initramfs-tools explicitly for Casper Live Boot and generic hardware
 mkdir -p /etc/initramfs-tools
@@ -313,8 +316,8 @@ icon-theme='Papirus-Dark'
 color-scheme='prefer-dark'
 
 [org/gnome/desktop/background]
-picture-uri='file:///usr/share/backgrounds/apexos/apexos-default-purple.png'
-picture-uri-dark='file:///usr/share/backgrounds/apexos/apexos-default-purple.png'
+picture-uri='file:///usr/share/backgrounds/apexos/aether-liquid-flow.jpg'
+picture-uri-dark='file:///usr/share/backgrounds/apexos/aether-liquid-flow.jpg'
 picture-options='zoom'
 
 [org/gnome/desktop/wm/preferences]
@@ -325,12 +328,30 @@ button-layout='appmenu:minimize,maximize,close'
 idle-delay=uint32 0
 
 [org/gnome/desktop/screensaver]
-lock-enabled=false
+lock-enabled=true
+picture-uri='file:///usr/share/backgrounds/apexos/aether-liquid-flow.jpg'
 
 [org/gnome/shell]
 enabled-extensions=['satasos-shell@satasos.org']
 DCONF_EOF
 dconf update 2>/dev/null || true
+
+# Pre-create "Install AetherOS" Desktop launcher (Live Mode: Test before installing)
+for u in apex aether; do
+    mkdir -p "/home/${u}/Desktop"
+    cat << 'INSTALLER_EOF' > "/home/${u}/Desktop/install-aetheros.desktop"
+[Desktop Entry]
+Type=Application
+Name=Install AetherOS
+Comment=Install AetherOS permanently to your disk
+Exec=sudo -E calamares
+Icon=calamares
+Terminal=false
+Categories=System;
+INSTALLER_EOF
+    chmod +x "/home/${u}/Desktop/install-aetheros.desktop"
+    chown -R "${u}:${u}" "/home/${u}/Desktop"
+done
 
 # 7. Re-build initramfs with all casper and storage hooks
 update-initramfs -u -k all
@@ -366,6 +387,12 @@ if [ -d "${WORKSPACE_ROOT}/branding" ]; then
     cp "${WORKSPACE_ROOT}/branding/logo.png" "${BUILD_DIR}/usr/share/pixmaps/aether-logo.png" 2>/dev/null || true
     cp "${WORKSPACE_ROOT}/branding/logo-icon.png" "${BUILD_DIR}/usr/share/pixmaps/aether-icon.png" 2>/dev/null || true
     cp "${WORKSPACE_ROOT}/branding/logo-wordmark.png" "${BUILD_DIR}/usr/share/pixmaps/aether-wordmark.png" 2>/dev/null || true
+fi
+
+# Inject AetherOS Boot Splash (Plymouth Glowing Logo + Progress Capsule)
+if [ -d "${WORKSPACE_ROOT}/branding/boot-splash/plymouth-theme" ]; then
+    mkdir -p "${BUILD_DIR}/usr/share/plymouth/themes/aetheros"
+    cp -r "${WORKSPACE_ROOT}/branding/boot-splash/plymouth-theme/"* "${BUILD_DIR}/usr/share/plymouth/themes/aetheros/" 2>/dev/null || true
 fi
 
 # Inject GNOME Shell extension
@@ -449,15 +476,21 @@ if loadfont /boot/grub/font.pf2 ; then
     terminal_output gfxterm
 fi
 
-menuentry "Start AetherOS 1.0 (Standard Edition)" {
+menuentry "Try AetherOS 1.0 (Live Test Mode - Test Before Installing)" {
     set gfxpayload=keep
-    linux /casper/vmlinuz boot=casper username=apex hostname=aetheros rw ignore_uuid noprompt quiet fastboot loglevel=3 fsck.mode=skip systemd.show_status=auto console=tty0 console=ttyS0 ---
+    linux /casper/vmlinuz boot=casper username=apex hostname=aetheros rw ignore_uuid noprompt quiet splash fastboot loglevel=3 fsck.mode=skip systemd.show_status=auto console=tty0 console=ttyS0 ---
+    initrd /casper/initrd
+}
+
+menuentry "Install AetherOS 1.0 to Disk (Direct Calamares Installer)" {
+    set gfxpayload=keep
+    linux /casper/vmlinuz boot=casper username=apex hostname=aetheros rw ignore_uuid noprompt quiet splash fastboot loglevel=3 fsck.mode=skip systemd.show_status=auto only-ubiquity console=tty0 console=ttyS0 ---
     initrd /casper/initrd
 }
 
 menuentry "Start AetherOS 1.0 (Safe Graphics / Compatibility Mode)" {
     set gfxpayload=keep
-    linux /casper/vmlinuz boot=casper username=apex hostname=aetheros rw ignore_uuid nomodeset noprompt quiet fastboot loglevel=3 fsck.mode=skip console=tty0 console=ttyS0 ---
+    linux /casper/vmlinuz boot=casper username=apex hostname=aetheros rw ignore_uuid nomodeset noprompt console=tty0 console=ttyS0 ---
     initrd /casper/initrd
 }
 EOF

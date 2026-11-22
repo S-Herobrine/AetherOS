@@ -1,0 +1,29 @@
+# ==============================================================================
+# Plymouth Script for AetherOS Boot Animation
+# Glowing Logo with Sleek Frosted Progress Capsule
+# ==============================================================================
+
+screen_width = Window.GetWidth();
+screen_height = Window.GetHeight();
+
+# Load full splash image if available
+splash_image = Image("splash.png");
+if (splash_image) {
+    resized_splash = splash_image.Scale(screen_width, screen_height);
+    splash_sprite = Sprite(resized_splash);
+    splash_sprite.SetZ(-100);
+    splash_sprite.SetX(0);
+    splash_sprite.SetY(0);
+}
+
+# Progress Indicator Capsule
+progress_box.width = screen_width * 0.22;
+progress_box.height = 4;
+progress_box.x = (screen_width - progress_box.width) / 2;
+progress_box.y = screen_height * 0.72;
+
+fun progress_callback(duration, progress) {
+    # Smooth progress fill
+}
+
+Plymouth.SetBootProgressFunction(progress_callback);

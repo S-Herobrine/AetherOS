@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=AetherOS Boot Splash
+Description=AetherOS Glowing Liquid Glass Boot Loading Screen
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/aetheros
+ScriptFile=/usr/share/plymouth/themes/aetheros/aetheros.script

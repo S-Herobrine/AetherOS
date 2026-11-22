@@ -1,7 +1,7 @@
-# GRUB2 Theme for ApexOS (Purple Dark Edition)
+# GRUB2 Theme for AetherOS (Liquid Flow Edition)
 title-text: ""
 desktop-image: "background.png"
-desktop-color: "#1E1B2E"
+desktop-color: "#12132D"
 
 # Boot menu box
 + boot_menu {
@@ -11,10 +11,9 @@ desktop-color: "#1E1B2E"
     height = 40%
     item_color = "#DDD6FE"
     selected_item_color = "#FFFFFF"
-    item_height = 36
-    item_padding = 6
+    item_height = 38
+    item_padding = 8
     item_spacing = 10
-    selected_item_pixmap_style = "selected_*.png"
 }
 
 # Progress bar
@@ -23,11 +22,11 @@ desktop-color: "#1E1B2E"
     left = 35%
     top = 80%
     width = 30%
-    height = 8
+    height = 6
     show_text = true
-    text_color = "#A78BFA"
+    text_color = "#FFFFFF"
     font = "Inter 10"
-    text = "Booting ApexOS in %d seconds..."
-    fg_color = "#7C3AED"
-    bg_color = "#2D2640"
+    text = "Starting AetherOS in %d seconds..."
+    fg_color = "#4F86F7"
+    bg_color = "rgba(255,255,255,0.15)"
 }
