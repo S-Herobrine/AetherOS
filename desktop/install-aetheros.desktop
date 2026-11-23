@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Install AetherOS 1.0
+GenericName=Live OS Installer
+Comment=Install AetherOS permanently to your hard drive or SSD
+Exec=sudo -E calamares
+Icon=/usr/share/pixmaps/aether-icon.png
+Terminal=false
+Categories=System;Utility;
+StartupNotify=true

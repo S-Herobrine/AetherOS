@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=AetherOS
+Comment=AetherOS Pure Fluidity Liquid Glass Desktop
+Exec=/usr/local/bin/aether-session
+TryExec=/usr/local/bin/aether-session
+Type=Application
+DesktopNames=AetherOS;

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openbox_menu xmlns="http://openbox.org/3.4/menu">
+  <menu id="root-menu" label="AetherOS">
+    <item label="🚀 Install AetherOS 1.0">
+      <action name="Execute">
+        <command>sudo -E calamares</command>
+      </action>
+    </item>
+    <separator />
+    <item label="🌐 Firefox Browser">
+      <action name="Execute">
+        <command>firefox</command>
+      </action>
+    </item>
+    <item label="📁 File Manager">
+      <action name="Execute">
+        <command>satasos-files</command>
+      </action>
+    </item>
+    <item label="⚙️ Settings">
+      <action name="Execute">
+        <command>satasos-settings</command>
+      </action>
+    </item>
+    <item label="💻 Terminal">
+      <action name="Execute">
+        <command>gnome-terminal</command>
+      </action>
+    </item>
+    <item label="🎨 GIMP Photo Editor">
+      <action name="Execute">
+        <command>gimp</command>
+      </action>
+    </item>
+    <separator label="Universal Runners" />
+    <item label="🪟 Run Windows App (.exe)">
+      <action name="Execute">
+        <command>aether-windows-runner</command>
+      </action>
+    </item>
+    <item label="🍎 Run macOS App (.dmg)">
+      <action name="Execute">
+        <command>aether-macos-runner</command>
+      </action>
+    </item>
+    <separator label="System" />
+    <item label="🔒 Lock Screen">
+      <action name="Execute">
+        <command>dm-tool lock || light-locker-command -l || true</command>
+      </action>
+    </item>
+    <item label="🔄 Restart">
+      <action name="Execute">
+        <command>systemctl reboot</command>
+      </action>
+    </item>
+    <item label="⏻ Power Off">
+      <action name="Execute">
+        <command>systemctl poweroff</command>
+      </action>
+    </item>
+  </menu>
+</openbox_menu>
