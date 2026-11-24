@@ -491,13 +491,13 @@ fi
 
 menuentry "Try AetherOS 1.0 (Live Test Mode - Test Before Installing)" {
     set gfxpayload=keep
-    linux /casper/vmlinuz boot=casper username=apex hostname=aetheros rw ignore_uuid noprompt quiet splash fastboot loglevel=3 fsck.mode=skip systemd.show_status=auto console=tty0 console=ttyS0 ---
+    linux /casper/vmlinuz boot=casper username=apex hostname=aetheros rw ignore_uuid noprompt quiet splash fastboot loglevel=0 vt.global_cursor_default=0 systemd.show_status=false rd.udev.log_level=0 udev.log_priority=0 fsck.mode=skip console=tty2 ---
     initrd /casper/initrd
 }
 
 menuentry "Install AetherOS 1.0 to Disk (Direct Calamares Installer)" {
     set gfxpayload=keep
-    linux /casper/vmlinuz boot=casper username=apex hostname=aetheros rw ignore_uuid noprompt quiet splash fastboot loglevel=3 fsck.mode=skip systemd.show_status=auto only-ubiquity console=tty0 console=ttyS0 ---
+    linux /casper/vmlinuz boot=casper username=apex hostname=aetheros rw ignore_uuid noprompt quiet splash fastboot loglevel=0 vt.global_cursor_default=0 systemd.show_status=false rd.udev.log_level=0 udev.log_priority=0 fsck.mode=skip only-ubiquity console=tty2 ---
     initrd /casper/initrd
 }
 
