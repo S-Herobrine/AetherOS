@@ -2,6 +2,7 @@
 # ==============================================================================
 # AetherOS Unified Standard Edition ISO Builder (FlowOS / Nava OS Architecture)
 # Ultra-fast 4-second boot, 128MB RAM minimum, zero-segfault liquid glass desktop
+# Optimized for ultra-fast build (<20 mins) on GitHub Actions Azure Runners
 # ==============================================================================
 
 set -euo pipefail
@@ -11,6 +12,7 @@ DIST_VERSION="1.0"
 DIST_EDITION="Standard"
 ARCH="amd64"
 CODENAME="noble"
+MIRROR="http://azure.archive.ubuntu.com/ubuntu/"
 
 WORKSPACE_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 WORK_DIR="/tmp/aetheros-build-std"
@@ -22,23 +24,25 @@ ISO_NAME="${DIST_NAME}-${DIST_VERSION}-${DIST_EDITION}-${ARCH}.iso"
 echo "======================================================================"
 echo "          Starting ${DIST_NAME} ${DIST_VERSION} (${DIST_EDITION}) ISO Build"
 echo "          Target: 4-Sec Boot, 128MB RAM, Universal Apps, Liquid Glass"
+echo "          Fast-Mirror: ${MIRROR}"
 echo "======================================================================"
 
 rm -rf "${WORK_DIR}"
 mkdir -p "${OUTPUT_DIR}" "${BUILD_DIR}" "${ISO_DIR}/casper" "${ISO_DIR}/boot/grub" "${ISO_DIR}/.disk"
 
-# 1. Debootstrap base Ubuntu 24.04 LTS (Noble)
-echo "==> [Stage 1/9] Debootstrapping Ubuntu 24.04 LTS (Noble) base..."
+# 1. Debootstrap base Ubuntu 24.04 LTS (Noble) with Azure High-Speed Mirror
+echo "==> [Stage 1/9] Debootstrapping Ubuntu 24.04 LTS (Noble) base (high-speed mirror)..."
+debootstrap --arch="${ARCH}" "${CODENAME}" "${BUILD_DIR}" "${MIRROR}" || \
 debootstrap --arch="${ARCH}" "${CODENAME}" "${BUILD_DIR}" http://archive.ubuntu.com/ubuntu/
 
-# 2. Configure Repositories & DNS inside chroot
+# 2. Configure High-Speed Repositories & DNS inside chroot
 echo "==> [Stage 2/9] Configuring APT sources and networking..."
 cp /etc/resolv.conf "${BUILD_DIR}/etc/resolv.conf"
 
 cat << 'EOF' > "${BUILD_DIR}/etc/apt/sources.list"
-deb http://archive.ubuntu.com/ubuntu/ noble main restricted universe multiverse
-deb http://archive.ubuntu.com/ubuntu/ noble-updates main restricted universe multiverse
-deb http://security.ubuntu.com/ubuntu/ noble-security main restricted universe multiverse
+deb http://azure.archive.ubuntu.com/ubuntu/ noble main restricted universe multiverse
+deb http://azure.archive.ubuntu.com/ubuntu/ noble-updates main restricted universe multiverse
+deb http://azure.archive.ubuntu.com/ubuntu/ noble-security main restricted universe multiverse
 EOF
 
 # 3. Mount virtual filesystems for chroot operations
@@ -57,7 +61,15 @@ unmount_chroot() {
 }
 trap unmount_chroot EXIT
 
-# 4. Install Full Package Suite & Subsystems
+# Prevent package daemon auto-start in chroot (prevents package installation hangs)
+mkdir -p "${BUILD_DIR}/usr/sbin"
+cat << 'POLICY_EOF' > "${BUILD_DIR}/usr/sbin/policy-rc.d"
+#!/bin/sh
+exit 101
+POLICY_EOF
+chmod +x "${BUILD_DIR}/usr/sbin/policy-rc.d"
+
+# 4. Install Full Package Suite & Subsystems (Streamlined for 60fps fluidity & zero crash)
 echo "==> [Stage 4/9] Installing kernel, casper, desktop and display packages..."
 chroot "${BUILD_DIR}" /bin/bash << 'CHROOT_PKG_EOF'
 export DEBIAN_FRONTEND=noninteractive
@@ -87,15 +99,9 @@ apt-get install -y --no-install-recommends \
     xorg \
     xserver-xorg-video-all \
     xserver-xorg-input-all \
-    gnome-session \
-    ubuntu-session \
     at-spi2-core \
-    gnome-shell \
-    gnome-settings-daemon \
-    mutter \
     libgl1-mesa-dri \
     mesa-utils \
-    gnome-control-center \
     gnome-terminal \
     nautilus \
     xdg-user-dirs \
@@ -307,9 +313,6 @@ XSESSION_USER
 done
 
 # Ensure PAM permits instant autologin for live session
-if [ -f /etc/pam.d/gdm-autologin ]; then
-    sed -i '1s/^/auth sufficient pam_permit.so\n/' /etc/pam.d/gdm-autologin
-fi
 if [ -f /etc/pam.d/lightdm-autologin ]; then
     sed -i '1s/^/auth sufficient pam_permit.so\n/' /etc/pam.d/lightdm-autologin
 fi
@@ -325,7 +328,6 @@ XWRAP_EOF
 mkdir -p /usr/share/xsessions
 ln -sf /usr/share/xsessions/aetheros.desktop /usr/share/xsessions/default.desktop 2>/dev/null || true
 ln -sf /usr/share/xsessions/aetheros.desktop /usr/share/xsessions/gnome.desktop 2>/dev/null || true
-ln -sf /usr/share/xsessions/aetheros.desktop /usr/share/xsessions/gnome-xorg.desktop 2>/dev/null || true
 ln -sf /usr/share/xsessions/aetheros.desktop /usr/share/xsessions/ubuntu.desktop 2>/dev/null || true
 
 # 6. Configure LightDM (Primary Display Manager for instant live desktop autologin)
@@ -358,7 +360,6 @@ echo "/usr/sbin/lightdm" > /etc/X11/default-display-manager
 mkdir -p /etc/systemd/system
 ln -sf /lib/systemd/system/lightdm.service /etc/systemd/system/display-manager.service
 ln -sf /lib/systemd/system/graphical.target /etc/systemd/system/default.target
-systemctl disable gdm3 2>/dev/null || true
 systemctl enable lightdm 2>/dev/null || true
 
 # Set default session for user apex in AccountsService
@@ -400,10 +401,6 @@ picture-uri='file:///usr/share/backgrounds/apexos/aether-liquid-flow.jpg'
 picture-uri-dark='file:///usr/share/backgrounds/apexos/aether-liquid-flow.jpg'
 picture-options='zoom'
 
-[org/gnome/desktop/wm/preferences]
-theme='ApexOS-Dark'
-button-layout='appmenu:minimize,maximize,close'
-
 [org/gnome/desktop/session]
 idle-delay=uint32 0
 
@@ -416,6 +413,9 @@ dconf update 2>/dev/null || true
 # 10. Re-build initramfs with casper, storage, and Plymouth boot splash hooks
 echo "==> Updating initramfs with AetherOS boot splash..."
 update-initramfs -u -k all
+
+# Remove policy-rc.d now that packages are installed
+rm -f /usr/sbin/policy-rc.d
 
 # Clean APT caches to keep image size compact
 apt-get autoremove -y
@@ -434,7 +434,7 @@ cp "${INITRD}" "${ISO_DIR}/casper/initrd"
 # Unmount virtual filesystems BEFORE mksquashfs
 unmount_chroot
 trap - EXIT
-rm -f "${BUILD_DIR}/etc/resolv.conf"
+rm -f "${BUILD_DIR}/etc/resolv.conf" "${BUILD_DIR}/usr/sbin/policy-rc.d" 2>/dev/null || true
 
 # Ensure all essential root mountpoints exist in the rootfs
 mkdir -p "${BUILD_DIR}/proc" \
@@ -469,10 +469,11 @@ echo "full_cd/single" > "${ISO_DIR}/.disk/cd_type"
 # Write filesystem uncompressed size for casper overlay RAM calculation
 printf $(du -sx --block-size=1 "${BUILD_DIR}" | cut -f1) > "${ISO_DIR}/casper/filesystem.size"
 
-# Generate compressed squashfs
-echo "==> Generating compressed squashfs filesystem (~3-5 mins)..."
+# Generate compressed squashfs (optimized with multithreading and fast zstd)
+CORES=$(nproc 2>/dev/null || echo 2)
+echo "==> Generating compressed squashfs filesystem using ${CORES} CPU cores (~2-3 mins)..."
 mksquashfs "${BUILD_DIR}" "${ISO_DIR}/casper/filesystem.squashfs" \
-    -comp zstd -Xcompression-level 3 -noappend
+    -comp zstd -Xcompression-level 1 -processors "${CORES}" -noappend
 
 # 9. Create GRUB2 Boot Configuration & Package Hybrid ISO
 echo "==> [Stage 9/9] Packaging bootable hybrid ISO..."

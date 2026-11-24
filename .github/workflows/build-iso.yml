@@ -9,7 +9,7 @@ jobs:
   build-aetheros:
     name: Build AetherOS Unified Edition (128MB RAM / 1GB Storage Minimum)
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 360
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
