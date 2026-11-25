@@ -30,7 +30,7 @@ jobs:
 
       - name: Build Unified AetherOS ISO (~20 mins)
         run: |
-          find . -type f \( -name "*.sh" -o -name "*.py" -o -name "*.desktop" -o -name "*.tint2rc" -o -name "*.xml" \) -exec sed -i 's/\r$//' {} + 2>/dev/null || true
+          find . -type f \( -name "*.sh" -o -name "*.py" -o -name "*.desktop" -o -name "*.tint2rc" -o -name "*.xml" -o -name "*.rasi" -o -name "*.conf" \) -exec sed -i 's/\r$//' {} + 2>/dev/null || true
           chmod +x build/*.sh scripts/*.sh desktop/*.sh 2>/dev/null || true
           sudo bash build/build-iso-standard.sh
 

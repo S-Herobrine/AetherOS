@@ -156,6 +156,8 @@ mkdir -p "${BUILD_DIR}/usr/share/pixmaps" \
          "${BUILD_DIR}/usr/share/plymouth/themes/aetheros" \
          "${BUILD_DIR}/etc/xdg/openbox" \
          "${BUILD_DIR}/etc/xdg/tint2" \
+         "${BUILD_DIR}/etc/xdg/picom" \
+         "${BUILD_DIR}/etc/xdg/rofi" \
          "${BUILD_DIR}/usr/local/bin" \
          "${BUILD_DIR}/usr/share/applications" \
          "${BUILD_DIR}/usr/share/xsessions"
@@ -193,6 +195,16 @@ fi
 if [ -f "${WORKSPACE_ROOT}/themes/tint2/aetheros-dock.tint2rc" ]; then
     cp "${WORKSPACE_ROOT}/themes/tint2/aetheros-dock.tint2rc" "${BUILD_DIR}/etc/xdg/tint2/aetheros-dock.tint2rc" 2>/dev/null || true
     cp "${WORKSPACE_ROOT}/themes/tint2/aetheros-dock.tint2rc" "${BUILD_DIR}/etc/xdg/tint2/tint2rc" 2>/dev/null || true
+fi
+
+# Copy Picom Liquid Glass Blur & Rounded Corners Config
+if [ -f "${WORKSPACE_ROOT}/themes/picom/aetheros-picom.conf" ]; then
+    cp "${WORKSPACE_ROOT}/themes/picom/aetheros-picom.conf" "${BUILD_DIR}/etc/xdg/picom/aetheros-picom.conf" 2>/dev/null || true
+fi
+
+# Copy Rofi Centered Liquid Glass Start Menu Theme
+if [ -f "${WORKSPACE_ROOT}/themes/rofi/aetheros-start.rasi" ]; then
+    cp "${WORKSPACE_ROOT}/themes/rofi/aetheros-start.rasi" "${BUILD_DIR}/etc/xdg/rofi/aetheros-start.rasi" 2>/dev/null || true
 fi
 
 # Copy GTK Theme
