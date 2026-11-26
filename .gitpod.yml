@@ -1,0 +1,10 @@
+# Gitpod configuration for zero-local-storage, hardware-accelerated AetherOS testing
+tasks:
+  - name: AetherOS Cloud Runner
+    init: echo "Ready to launch AetherOS in browser! Run: bash scripts/test-web-iso.sh"
+    command: bash scripts/test-web-iso.sh
+
+ports:
+  - port: 6080
+    onOpen: open-preview
+    visibility: private

@@ -33,13 +33,18 @@ else
     xsetroot -solid "#191B3B" &
 fi
 
-# 3. Launch Picom Glass Compositor (Enables rounded corners, blur & smooth fading)
-PICOM_CFG="/etc/xdg/picom/aetheros-picom.conf"
+# 3. Launch Picom Glass Compositor (Auto-tunes for Real GPU vs VM/Codespaces)
+PICOM_GPU="/etc/xdg/picom/aetheros-picom.conf"
+PICOM_VM="/etc/xdg/picom/aetheros-picom-vm.conf"
 if command -v picom >/dev/null 2>&1; then
-    if [ -f "${PICOM_CFG}" ]; then
-        picom -b --config "${PICOM_CFG}" --backend glx 2>/dev/null || picom -b --config "${PICOM_CFG}" --backend xrender 2>/dev/null || true
-    else
-        picom -b --backend glx --vsync 2>/dev/null || picom -b --backend xrender 2>/dev/null || true
+    IS_VM=0
+    if command -v systemd-detect-virt >/dev/null 2>&1 && systemd-detect-virt -q; then
+        IS_VM=1
+    fi
+    if [ "$IS_VM" -eq 0 ] && [ -f "${PICOM_GPU}" ] && glxinfo 2>/dev/null | grep -qiE "direct rendering: Yes" && ! glxinfo 2>/dev/null | grep -qiE "llvmpipe|softpipe|swrast"; then
+        picom -b --config "${PICOM_GPU}" --backend glx 2>/dev/null || true
+    elif [ -f "${PICOM_VM}" ]; then
+        picom -b --config "${PICOM_VM}" --backend xrender 2>/dev/null || true
     fi
 fi
 

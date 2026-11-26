@@ -197,9 +197,12 @@ if [ -f "${WORKSPACE_ROOT}/themes/tint2/aetheros-dock.tint2rc" ]; then
     cp "${WORKSPACE_ROOT}/themes/tint2/aetheros-dock.tint2rc" "${BUILD_DIR}/etc/xdg/tint2/tint2rc" 2>/dev/null || true
 fi
 
-# Copy Picom Liquid Glass Blur & Rounded Corners Config
+# Copy Picom Liquid Glass Blur & VM-Fast Configs
 if [ -f "${WORKSPACE_ROOT}/themes/picom/aetheros-picom.conf" ]; then
     cp "${WORKSPACE_ROOT}/themes/picom/aetheros-picom.conf" "${BUILD_DIR}/etc/xdg/picom/aetheros-picom.conf" 2>/dev/null || true
+fi
+if [ -f "${WORKSPACE_ROOT}/themes/picom/aetheros-picom-vm.conf" ]; then
+    cp "${WORKSPACE_ROOT}/themes/picom/aetheros-picom-vm.conf" "${BUILD_DIR}/etc/xdg/picom/aetheros-picom-vm.conf" 2>/dev/null || true
 fi
 
 # Copy Rofi Centered Liquid Glass Start Menu Theme
@@ -251,8 +254,9 @@ export DEBIAN_FRONTEND=noninteractive
 export LC_ALL=C
 set -euo pipefail
 
-# 1. Configure initramfs-tools explicitly for Casper Live Boot and generic hardware
-mkdir -p /etc/initramfs-tools
+# 1. Configure initramfs-tools explicitly for Casper Live Boot, Plymouth Framebuffer, and generic hardware
+mkdir -p /etc/initramfs-tools /etc/initramfs-tools/conf.d
+echo "FRAMEBUFFER=y" > /etc/initramfs-tools/conf.d/splash
 touch /etc/initramfs-tools/initramfs.conf
 grep -q '^BOOT=' /etc/initramfs-tools/initramfs.conf && sed -i 's/^BOOT=.*/BOOT=casper/' /etc/initramfs-tools/initramfs.conf || echo 'BOOT=casper' >> /etc/initramfs-tools/initramfs.conf
 grep -q '^MODULES=' /etc/initramfs-tools/initramfs.conf && sed -i 's/^MODULES=.*/MODULES=most/' /etc/initramfs-tools/initramfs.conf || echo 'MODULES=most' >> /etc/initramfs-tools/initramfs.conf
@@ -267,7 +271,7 @@ export BUILD_SYSTEM="Ubuntu"
 export FLAVOUR="AetherOS"
 CASPER_EOF
 
-# 2. Add all storage, CD-ROM, and virtualization drivers to initramfs
+# 2. Add storage, CD-ROM, virtualization, and early GPU/DRM framebuffer drivers to initramfs
 cat << 'MOD_EOF' >> /etc/initramfs-tools/modules
 sr_mod
 cdrom
@@ -276,6 +280,12 @@ ahci
 sd_mod
 virtio_blk
 virtio_pci
+virtio_gpu
+bochs
+qxl
+drm
+drm_kms_helper
+simpledrm
 overlay
 squashfs
 isofs
@@ -384,7 +394,15 @@ SystemAccount=false
 ACC_EOF
 chmod 0600 /var/lib/AccountsService/users/apex
 
-# 7. Register Plymouth Glowing Boot Splash Theme
+# 7. Register Plymouth Glowing Boot Splash Theme (Zero delay!)
+mkdir -p /etc/plymouth
+cat << 'PLYMOUTH_CONF' > /etc/plymouth/plymouthd.conf
+[Daemon]
+Theme=aetheros
+ShowDelay=0
+DeviceTimeout=5
+PLYMOUTH_CONF
+
 if [ -d /usr/share/plymouth/themes/aetheros ]; then
     update-alternatives --install /usr/share/plymouth/themes/default.plymouth default.plymouth /usr/share/plymouth/themes/aetheros/aetheros.plymouth 100 2>/dev/null || true
     update-alternatives --set default.plymouth /usr/share/plymouth/themes/aetheros/aetheros.plymouth 2>/dev/null || true
@@ -494,10 +512,11 @@ cat << 'EOF' > "${ISO_DIR}/boot/grub/grub.cfg"
 set default="0"
 set timeout=3
 
+insmod all_video
 insmod font
 if loadfont /boot/grub/font.pf2 ; then
     insmod gfxterm
-    set gfxmode=auto
+    set gfxmode=1280x800x32,auto
     terminal_output gfxterm
 fi
 
