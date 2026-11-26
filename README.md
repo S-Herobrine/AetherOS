@@ -69,7 +69,7 @@ It is tuned for budget laptops and older desktops, so a PC with **4 GB of RAM an
 
 AetherOS is engineered for machines with **4 GB of RAM** and **14 to 16 GB of storage**.
 
-| | Standard OS (Ubuntu / Windows 11) | **AetherOS Low-End Edition** |
+| | Standard OS (Ubuntu / Windows 11) | **AetherOS Unified Edition** |
 |---|---|---|
 | **Idle RAM use** | 1,500 to 2,800 MB | **~380 to 450 MB** |
 | **Free RAM on a 4 GB PC** | Less than 1.5 GB | **Over 3.5 GB for your apps** |
@@ -152,12 +152,12 @@ AetherOS Widgets (Rainmeter style), AetherOS Tweaks (Windhawk style), Dark and L
 
 ## Get started
 
-**1. Download** the latest ISO from the [Releases page](https://github.com/AetherOS/AetherOS/releases).
+**1. Download** the latest ISO from the [Releases page](https://github.com/S-Herobrine/AetherOS/releases).
 
 **2. Write it to a USB stick** with [balenaEtcher](https://etcher.balena.io/), or from a Linux terminal:
 
 ```bash
-sudo dd if=AetherOS-1.0-lowend-amd64.iso of=/dev/sdX bs=4M status=progress oflag=sync
+sudo dd if=AetherOS-1.0-Standard-amd64.iso of=/dev/sdX bs=4M status=progress oflag=sync
 ```
 
 > [!WARNING]
@@ -179,20 +179,20 @@ The build system is designed to run on modest hardware.
 
 ```bash
 # Clone the repository
-git clone https://github.com/AetherOS/AetherOS.git
+git clone https://github.com/S-Herobrine/AetherOS.git
 cd AetherOS
 
 # Install minimal build dependencies
 sudo make install-deps
 
-# Build the compact Low-End PC ISO
-sudo bash build/build-iso-lowend.sh
+# Build the unified AetherOS ISO
+sudo bash build/build-iso-standard.sh
 ```
 
 The finished image lands here (about 1.9 GB):
 
 ```text
-build/output/AetherOS-1.0-lowend-amd64.iso
+build/output/AetherOS-1.0-Standard-amd64.iso
 ```
 
 ## Brand and design system
