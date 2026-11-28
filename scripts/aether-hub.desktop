@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=AetherOS Hub
+GenericName=6-in-1 OS Control Center
+Comment=Launch Windows, Android 14, macOS, Linux, Widgets & Settings
+Exec=python3 /usr/local/bin/aether-hub.py
+Icon=/usr/share/pixmaps/aether-icon.png
+Terminal=false
+Categories=System;Settings;
+StartupNotify=true

@@ -123,6 +123,10 @@ apt-get install -y --no-install-recommends \
     papirus-icon-theme \
     fonts-inter \
     fonts-jetbrains-mono \
+    python3-gi \
+    gir1.2-gtk-4.0 \
+    gir1.2-adw-1 \
+    gir1.2-gtk-3.0 \
     vlc \
     gimp \
     firefox \

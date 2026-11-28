@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ApexOS System Tweaker (Windhawk Counterpart)
+AetherOS System Tweaker (Windhawk Counterpart)
 Provides deep customization options for the taskbar, animations, windows, and theme colors.
 """
 
@@ -16,7 +16,7 @@ from gi.repository import Gtk, Adw, Gio
 class ApexTweaksApp(Adw.Application):
     def __init__(self):
         super().__init__(
-            application_id='org.apexos.tweaks',
+            application_id='org.AetherOS.tweaks',
             flags=Gio.ApplicationFlags.FLAGS_NONE
         )
 
@@ -30,7 +30,7 @@ class ApexTweaksWindow(Gtk.ApplicationWindow):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.set_title("ApexOS System Tweaker")
+        self.set_title("AetherOS System Tweaker")
         self.set_default_size(700, 520)
 
         main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=16)
@@ -48,7 +48,7 @@ class ApexTweaksWindow(Gtk.ApplicationWindow):
         header_card.append(icon)
 
         title_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
-        lbl_title = Gtk.Label(label="ApexOS System Modder & Tweaker")
+        lbl_title = Gtk.Label(label="AetherOS System Modder & Tweaker")
         lbl_title.set_halign(Gtk.Align.START)
         lbl_title.add_css_class("title-2")
         title_box.append(lbl_title)

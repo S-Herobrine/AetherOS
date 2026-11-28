@@ -1,7 +1,7 @@
 [Desktop Entry]
-Name=ApexOS Tweaks
+Name=AetherOS Tweaks
 GenericName=System Tweaker
-Comment=Windhawk-style shell and taskbar tweaker for ApexOS
+Comment=Windhawk-style shell and taskbar tweaker for AetherOS
 Exec=python3 /usr/local/bin/apexos-tweaks.py
 Icon=preferences-desktop
 Terminal=false

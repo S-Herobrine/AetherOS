@@ -67,5 +67,11 @@ elif command -v tint2 >/dev/null 2>&1; then
     tint2 &
 fi
 
-# 6. Exec Openbox Window Manager (Rock-solid, zero segfault, 75MB RAM)
+# 6. Auto-launch AetherOS Universal Hub on first login (6-in-1 OS showcase)
+if [ -f "/usr/local/bin/aether-hub.py" ] && [ ! -f "${HOME}/.config/aetheros-hub-shown" ]; then
+    touch "${HOME}/.config/aetheros-hub-shown"
+    (sleep 1 && python3 /usr/local/bin/aether-hub.py) &
+fi
+
+# 7. Exec Openbox Window Manager (Rock-solid, zero segfault, 75MB RAM)
 exec openbox-session

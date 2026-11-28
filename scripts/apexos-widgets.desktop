@@ -1,7 +1,7 @@
 [Desktop Entry]
-Name=ApexOS Widgets
+Name=AetherOS Widgets
 GenericName=Desktop Widgets
-Comment=Rainmeter-like lightweight desktop gadgets for ApexOS
+Comment=Rainmeter-like lightweight desktop gadgets for AetherOS
 Exec=python3 /usr/local/bin/apexos-widgets.py
 Icon=preferences-desktop-wallpaper
 Terminal=false

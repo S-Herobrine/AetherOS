@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openbox_menu xmlns="http://openbox.org/3.4/menu">
   <menu id="root-menu" label="AetherOS">
+    <item label="✨ AetherOS Universal Hub (6-in-1)">
+      <action name="Execute">
+        <command>python3 /usr/local/bin/aether-hub.py</command>
+      </action>
+    </item>
+    <item label="🤖 AetherOS Play Store (Android 14)">
+      <action name="Execute">
+        <command>python3 /usr/local/bin/aether-playstore.py</command>
+      </action>
+    </item>
     <item label="🚀 Install AetherOS 1.0">
       <action name="Execute">
         <command>sudo -E calamares</command>
@@ -12,14 +22,19 @@
         <command>firefox</command>
       </action>
     </item>
-    <item label="📁 File Manager">
+    <item label="📁 AetherOS Files">
       <action name="Execute">
-        <command>satasos-files</command>
+        <command>python3 /usr/local/bin/satasos-files.py</command>
       </action>
     </item>
-    <item label="⚙️ Settings">
+    <item label="⚙️ AetherOS Settings">
       <action name="Execute">
-        <command>satasos-settings</command>
+        <command>python3 /usr/local/bin/satasos-settings.py</command>
+      </action>
+    </item>
+    <item label="🧩 AetherOS Widgets">
+      <action name="Execute">
+        <command>python3 /usr/local/bin/apexos-widgets.py</command>
       </action>
     </item>
     <item label="💻 Terminal">
@@ -27,20 +42,15 @@
         <command>gnome-terminal</command>
       </action>
     </item>
-    <item label="🎨 GIMP Photo Editor">
-      <action name="Execute">
-        <command>gimp</command>
-      </action>
-    </item>
     <separator label="Universal Runners" />
     <item label="🪟 Run Windows App (.exe)">
       <action name="Execute">
-        <command>aether-windows-runner</command>
+        <command>bash /usr/local/bin/aether-windows-runner.sh</command>
       </action>
     </item>
     <item label="🍎 Run macOS App (.dmg)">
       <action name="Execute">
-        <command>aether-macos-runner</command>
+        <command>bash /usr/local/bin/aether-macos-runner.sh</command>
       </action>
     </item>
     <separator label="System" />

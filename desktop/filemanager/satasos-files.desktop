@@ -1,7 +1,7 @@
 [Desktop Entry]
-Name=SatasOS Files
+Name=AetherOS Files
 GenericName=File Explorer
-Comment=Windows Explorer-style file manager for SatasOS
+Comment=Windows Explorer-style file manager for AetherOS
 Exec=python3 /usr/local/bin/satasos-files.py %U
 Icon=system-file-manager
 Terminal=false

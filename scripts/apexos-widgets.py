@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ApexOS Desktop Widgets Engine (Rainmeter Counterpart)
+AetherOS Desktop Widgets Engine (Rainmeter Counterpart)
 Provides customizable, lightweight floating desktop widgets for system stats, clock, notes, and music.
 Designed with minimal CPU and memory footprint (<25MB RAM).
 """
@@ -44,7 +44,7 @@ def get_ram_usage():
 class ApexWidgetsApp(Adw.Application):
     def __init__(self):
         super().__init__(
-            application_id='org.apexos.widgets',
+            application_id='org.AetherOS.widgets',
             flags=Gio.ApplicationFlags.FLAGS_NONE
         )
 
@@ -58,7 +58,7 @@ class ApexWidgetsWindow(Gtk.ApplicationWindow):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.set_title("ApexOS Desktop Widgets")
+        self.set_title("AetherOS Desktop Widgets")
         self.set_default_size(320, 560)
         self.set_resizable(False)
 
@@ -174,7 +174,7 @@ class ApexWidgetsWindow(Gtk.ApplicationWindow):
         text_view = Gtk.TextView()
         text_view.set_size_request(-1, 80)
         buffer = text_view.get_buffer()
-        buffer.set_text("Welcome to ApexOS!\n- Super: Start Menu\n- Super+A: Android Drawer\n- Super+E: Explorer")
+        buffer.set_text("Welcome to AetherOS!\n- Super: Start Menu\n- Super+A: Android Drawer\n- Super+E: Explorer")
         note_card.append(text_view)
         main_box.append(note_card)
 

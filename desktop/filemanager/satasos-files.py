@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-SatasOS Files - Custom File Manager
-A modern file manager built with GTK4 for SatasOS.
+AetherOS Files - Custom File Manager
+A modern file manager built with GTK4 for AetherOS.
 Features tabbed browsing, multiple view modes, and full file operations.
 """
 
@@ -24,10 +24,10 @@ from pathlib import Path
 from datetime import datetime
 
 # ---------------------------------------------------------------------------
-# SatasOS Brand Colours
+# AetherOS Brand Colours
 # ---------------------------------------------------------------------------
-SATASOS_CSS = b"""
-/* SatasOS Files - Dark Purple Theme */
+AetherOS_CSS = b"""
+/* AetherOS Files - Dark Purple Theme */
 window, .background {
     background-color: #1E1B2E;
     color: #E8E0F0;
@@ -346,14 +346,14 @@ class TabState:
 # ---------------------------------------------------------------------------
 
 class FileManagerWindow(Gtk.ApplicationWindow):
-    """Main window of the SatasOS file manager."""
+    """Main window of the AetherOS file manager."""
 
     VIEW_ICON = 0
     VIEW_LIST = 1
     VIEW_DETAIL = 2
 
     def __init__(self, app):
-        super().__init__(application=app, title="SatasOS Files",
+        super().__init__(application=app, title="AetherOS Files",
                          default_width=1200, default_height=700)
 
         self.show_hidden = False
@@ -366,7 +366,7 @@ class FileManagerWindow(Gtk.ApplicationWindow):
 
         # -- CSS ---------------------------------------------------------------
         css_provider = Gtk.CssProvider()
-        css_provider.load_from_data(SATASOS_CSS)
+        css_provider.load_from_data(AetherOS_CSS)
         Gtk.StyleContext.add_provider_for_display(
             Gdk.Display.get_default(), css_provider,
             Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION,
@@ -1382,12 +1382,12 @@ class FileManagerWindow(Gtk.ApplicationWindow):
 
     def _action_about(self, _action, _param):
         dialog = Gtk.AlertDialog()
-        dialog.set_message("SatasOS Files")
+        dialog.set_message("AetherOS Files")
         dialog.set_detail(
-            "A modern file manager for SatasOS.\n\n"
+            "A modern file manager for AetherOS.\n\n"
             "Version 1.0\n"
             "Built with GTK4 and Python\n\n"
-            "© 2025 SatasOS Project"
+            "© 2025 AetherOS Project"
         )
         dialog.set_buttons(["Close"])
         dialog.set_default_button(0)
@@ -1420,15 +1420,15 @@ class FileManagerWindow(Gtk.ApplicationWindow):
 
 
 # ---------------------------------------------------------------------------
-# SatasOSFileManager Application
+# AetherOSFileManager Application
 # ---------------------------------------------------------------------------
 
-class SatasOSFileManager(Gtk.Application):
-    """Main application class for SatasOS Files."""
+class AetherOSFileManager(Gtk.Application):
+    """Main application class for AetherOS Files."""
 
     def __init__(self):
         super().__init__(
-            application_id="org.satasos.files",
+            application_id="org.AetherOS.files",
             flags=Gio.ApplicationFlags.HANDLES_OPEN,
         )
         self.connect("activate", self._on_activate)
@@ -1453,7 +1453,7 @@ class SatasOSFileManager(Gtk.Application):
 # ---------------------------------------------------------------------------
 
 def main():
-    app = SatasOSFileManager()
+    app = AetherOSFileManager()
     return app.run(sys.argv)
 
 

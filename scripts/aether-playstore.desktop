@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=AetherOS Play Store
+GenericName=Android 14 App Store
+Comment=Install and run Android 14 apps & APKs via Waydroid
+Exec=python3 /usr/local/bin/aether-playstore.py
+Icon=system-software-install
+Terminal=false
+Categories=System;Utility;
+StartupNotify=true

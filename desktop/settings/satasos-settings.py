@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-SatasOS Settings Application
+AetherOS Settings Application
 Android-style settings panel built with GTK4 and Libadwaita.
 """
 
@@ -26,8 +26,8 @@ except (ValueError, ImportError):
 # ---------------------------------------------------------------------------
 # Brand colours
 # ---------------------------------------------------------------------------
-SATASOS_CSS = b"""
-/* SatasOS Settings Dark Theme */
+AetherOS_CSS = b"""
+/* AetherOS Settings Dark Theme */
 window, .main-box {
     background-color: #1E1B2E;
     color: #E8E0F0;
@@ -223,7 +223,7 @@ CATEGORIES = [
     ("application-x-executable-symbolic", "Apps",    "Installed and default apps"),
     ("preferences-desktop-wallpaper-symbolic", "Appearance", "Theme, wallpaper, fonts"),
     ("emblem-system-symbolic",         "System",     "Language, date, accessibility"),
-    ("help-about-symbolic",            "About",      "SatasOS information"),
+    ("help-about-symbolic",            "About",      "AetherOS information"),
 ]
 
 # ---------------------------------------------------------------------------
@@ -264,7 +264,7 @@ SEARCH_ENTRIES = [
     ("System",  "Keyboard Layout",    "Input method and layout"),
     ("System",  "Date & Time",        "Clock settings"),
     ("System",  "Accessibility",      "Large text, high contrast"),
-    ("About",   "OS Version",         "SatasOS version information"),
+    ("About",   "OS Version",         "AetherOS version information"),
     ("About",   "Hardware",           "CPU, RAM, hostname"),
 ]
 
@@ -370,11 +370,11 @@ def _build_network_page():
     box.add_css_class("settings-page")
 
     box.append(_section_label("Wireless"))
-    box.append(create_setting_row("network-wireless-symbolic", "WiFi", "Connected to SatasOS-5G", _make_switch(True)))
+    box.append(create_setting_row("network-wireless-symbolic", "WiFi", "Connected to AetherOS-5G", _make_switch(True)))
 
     # Mock WiFi list
     wifi_networks = [
-        ("SatasOS-5G", "network-wireless-signal-excellent-symbolic", True),
+        ("AetherOS-5G", "network-wireless-signal-excellent-symbolic", True),
         ("Neighbor_Net", "network-wireless-signal-good-symbolic", False),
         ("CoffeeShop_Free", "network-wireless-signal-ok-symbolic", False),
         ("Hidden_Network", "network-wireless-signal-weak-symbolic", False),
@@ -749,7 +749,7 @@ def _build_appearance_page():
     box.append(_section_label("Icons & Fonts"))
     box.append(create_setting_row("preferences-desktop-theme-symbolic", "Icon Theme",
                                   "Select icon pack",
-                                  _string_list_dropdown(["SatasOS Default", "Adwaita", "Papirus", "Numix"], 0)))
+                                  _string_list_dropdown(["AetherOS Default", "Adwaita", "Papirus", "Numix"], 0)))
 
     font_btn = Gtk.FontButton()
     font_btn.set_font("Inter 11")
@@ -757,7 +757,7 @@ def _build_appearance_page():
 
     box.append(create_setting_row("input-mouse-symbolic", "Cursor Theme",
                                   "Select cursor style",
-                                  _string_list_dropdown(["SatasOS Default", "Adwaita", "Breeze", "DMZ"], 0)))
+                                  _string_list_dropdown(["AetherOS Default", "Adwaita", "Breeze", "DMZ"], 0)))
 
     return box
 
@@ -805,7 +805,7 @@ def _build_about_page():
     box.set_halign(Gtk.Align.FILL)
 
     # Logo / branding
-    logo_lbl = Gtk.Label(label="SatasOS")
+    logo_lbl = Gtk.Label(label="AetherOS")
     logo_lbl.add_css_class("about-logo")
     logo_lbl.set_margin_top(16)
     box.append(logo_lbl)
@@ -827,7 +827,7 @@ def _build_about_page():
     cpu_model, mem_total = _read_proc_info()
 
     info_items = [
-        ("OS Name",        "SatasOS"),
+        ("OS Name",        "AetherOS"),
         ("Version",        "1.0"),
         ("Kernel",         kernel),
         ("Architecture",   platform.machine()),
@@ -895,7 +895,7 @@ class SettingsWindow(Gtk.ApplicationWindow):
 
         # --- Apply CSS -------------------------------------------------
         css_provider = Gtk.CssProvider()
-        css_provider.load_from_data(SATASOS_CSS)
+        css_provider.load_from_data(AetherOS_CSS)
         Gtk.StyleContext.add_provider_for_display(
             Gdk.Display.get_default(),
             css_provider,
@@ -1077,12 +1077,12 @@ class SettingsWindow(Gtk.ApplicationWindow):
 # Application
 # ===================================================================
 
-class SatasOSSettings(Gtk.Application):
+class AetherOSSettings(Gtk.Application):
     """GTK4 Application wrapper."""
 
     def __init__(self):
         super().__init__(
-            application_id="org.satasos.settings",
+            application_id="org.AetherOS.settings",
             flags=Gio.ApplicationFlags.FLAGS_NONE,
         )
 
@@ -1092,7 +1092,7 @@ class SatasOSSettings(Gtk.Application):
 
 
 def main():
-    app = SatasOSSettings()
+    app = AetherOSSettings()
     app.run(sys.argv)
 
 
