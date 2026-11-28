@@ -83,6 +83,7 @@ launcher_icon_theme = Papirus-Dark
 launcher_item_app = /usr/share/applications/aether-menu.desktop
 launcher_item_app = /usr/share/applications/aether-hub.desktop
 launcher_item_app = /usr/share/applications/aether-playstore.desktop
+launcher_item_app = /usr/share/applications/aether-control-center.desktop
 launcher_item_app = /usr/share/applications/satasos-files.desktop
 launcher_item_app = /usr/share/applications/firefox.desktop
 launcher_item_app = /usr/share/applications/satasos-settings.desktop

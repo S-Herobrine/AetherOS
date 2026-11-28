@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 """
-AetherOS Universal Hub (6-in-1 Control Center)
-Unifies Windows (.exe), Android 14 (.apk), macOS (.dmg), Linux (.deb),
-NavaOS Liquid Glass Aesthetics, and FlowOS Performance Engine.
+AetherOS Universal Hub (7-in-1 OS Concept Realized)
+Combines Windows 11, Android 14 + GMS, NavaOS Glass, FlowOS Hybrid,
+macOS Smoothness, and Ubuntu Linux Core in one unified hub.
 """
 
-import os
 import subprocess
 import gi
 
@@ -28,7 +27,7 @@ window {
     background-color: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 16px;
-    padding: 16px;
+    padding: 14px;
 }
 .hub-card:hover {
     background-color: rgba(79, 134, 247, 0.14);
@@ -57,15 +56,15 @@ def get_ram_summary():
         total = mem.get("MemTotal", 1) // 1024
         avail = mem.get("MemAvailable", 1) // 1024
         used = max(0, total - avail)
-        return f"{used} MB / {total} MB RAM Active (zRAM Enabled)"
+        return f"{used} MB / {total} MB RAM Active (zRAM Compressed Swap)"
     except Exception:
         return "FlowOS Low-Memory Engine Active"
 
 
 class UniversalHubWindow(Gtk.ApplicationWindow):
     def __init__(self, app):
-        super().__init__(application=app, title="AetherOS Universal Hub")
-        self.set_default_size(840, 560)
+        super().__init__(application=app, title="AetherOS 1.0 — Universal 7-in-1 OS Hub")
+        self.set_default_size(900, 620)
 
         provider = Gtk.CssProvider()
         provider.load_from_data(CSS)
@@ -73,22 +72,25 @@ class UniversalHubWindow(Gtk.ApplicationWindow):
             self.get_display(), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
         )
 
-        root = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=14)
+        root = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
         root.set_margin_top(16)
         root.set_margin_bottom(16)
         root.set_margin_start(18)
         root.set_margin_end(18)
         self.set_child(root)
 
-        # Header Banner
+        # Top Banner
         banner = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=14)
         banner.add_css_class("hub-banner")
 
         btxt = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
         btxt.set_hexpand(True)
         t = Gtk.Label(xalign=0)
-        t.set_markup("<span size='x-large' weight='bold'>✨ AetherOS 1.0 — Universal 6-in-1 Hub</span>")
-        s = Gtk.Label(label="Windows 11 UX  •  Android 14 Play Store  •  macOS Runner  •  Ubuntu Linux  •  NavaOS Glass  •  FlowOS Speed", xalign=0)
+        t.set_markup("<span size='x-large' weight='bold'>✨ AetherOS 1.0 — One OS. Every Ecosystem.</span>")
+        s = Gtk.Label(
+            label="Windows 11 UX  •  Android 14 + GMS  •  NavaOS Glass  •  FlowOS Hybrid  •  macOS  •  Ubuntu Linux",
+            xalign=0,
+        )
         s.add_css_class("muted")
         self.ram_lbl = Gtk.Label(label=get_ram_summary(), xalign=0)
         btxt.append(t)
@@ -96,26 +98,60 @@ class UniversalHubWindow(Gtk.ApplicationWindow):
         btxt.append(self.ram_lbl)
         banner.append(btxt)
 
-        install_btn = Gtk.Button(label="🚀 Install AetherOS")
+        cc_btn = Gtk.Button(label="🎛️ Control Center")
+        cc_btn.add_css_class("action-btn")
+        cc_btn.connect("clicked", lambda _b: subprocess.Popen(["python3", "/usr/local/bin/aether-control-center.py"]))
+        banner.append(cc_btn)
+
+        install_btn = Gtk.Button(label="🚀 Install OS")
         install_btn.add_css_class("action-btn")
         install_btn.connect("clicked", lambda _b: subprocess.Popen(["sudo", "-E", "calamares"]))
         banner.append(install_btn)
         root.append(banner)
 
-        # 6-in-1 Cards Grid
-        grid = Gtk.Grid(row_spacing=12, column_spacing=12, column_homogeneous=True, row_homogeneous=True)
-        grid.set_vexpand(True)
+        # Notebook Tabs for Full Feature Showoff
+        notebook = Gtk.Notebook()
+        notebook.set_vexpand(True)
+        root.append(notebook)
 
-        cards = [
-            ("🪟 Windows Apps (.exe)", "Run Windows software & games via Wine + DXVK.", "Open .EXE Runner", ["bash", "/usr/local/bin/aether-windows-runner.sh"]),
-            ("🤖 Google Play & Android 14", "Launch Android 14 apps, Play Store & .APK files.", "Open Play Store", ["python3", "/usr/local/bin/aether-playstore.py"]),
-            ("🍎 macOS Runner (.dmg)", "Run macOS .dmg / .app packages via Darling layer.", "Open .DMG Runner", ["bash", "/usr/local/bin/aether-macos-runner.sh"]),
-            ("🐧 Linux Core & Files", "Ubuntu 24.04 LTS + AetherOS File Explorer.", "Open AetherOS Files", ["python3", "/usr/local/bin/satasos-files.py"]),
-            ("✨ NavaOS Liquid Widgets", "Live floating CPU, RAM, Clock & Note widgets.", "Launch Widgets", ["python3", "/usr/local/bin/apexos-widgets.py"]),
-            ("⚡ FlowOS Tweaks & Settings", "Customize glass theme, dock, fonts & performance.", "Open Settings", ["python3", "/usr/local/bin/satasos-settings.py"]),
-        ]
+        # Tab 1: 7-in-1 Ecosystem Launchers
+        tab1 = self._build_grid([
+            ("🪟 Windows 11 Layer", "Wine + DXVK runtime for .exe apps, games & Explorer tabs.", "Run .EXE App", ["bash", "/usr/local/bin/aether-windows-runner.sh"]),
+            ("🤖 Android 14 + GMS", "Google Play Store, Play Services, MicroG & .apk sideloader.", "Open Play Store", ["python3", "/usr/local/bin/aether-playstore.py"]),
+            ("🍎 macOS Runtime", "Darling Mach-O layer for .dmg & .app compatibility tools.", "Run .DMG App", ["bash", "/usr/local/bin/aether-macos-runner.sh"]),
+            ("🐧 Ubuntu 24.04 Core", "APT, Flatpak, AppImage, Bash/Zsh & AetherOS File Explorer.", "Open Files", ["python3", "/usr/local/bin/satasos-files.py"]),
+            ("✨ NavaOS Liquid Glass", "Frosted glass dock, centered Start Menu & floating widgets.", "Launch Widgets", ["python3", "/usr/local/bin/apexos-widgets.py"]),
+            ("⚡ FlowOS Tweaks", "Custom taskbar, theme toggle, zRAM & 4-second boot tuning.", "Open Tweaks", ["python3", "/usr/local/bin/apexos-tweaks.py"]),
+        ])
+        notebook.append_page(tab1, Gtk.Label(label="🌐 7-in-1 Ecosystems"))
 
-        for idx, (ctitle, cdesc, cbtn, cmd) in enumerate(cards):
+        # Tab 2: GMS & Google Suite
+        tab2 = self._build_grid([
+            ("🛍️ Google Play Store", "Browse & install Android 14 apps inside Waydroid container.", "Open Play Store", ["python3", "/usr/local/bin/aether-playstore.py"]),
+            ("🌐 Chrome / Web Apps", "Launch Firefox / Web Engine for Gmail, Maps, Drive & YouTube.", "Open Browser", ["firefox", "https://www.youtube.com/@ZeroToBootOfficial"]),
+            ("📦 Direct APK Installer", "Sideload any Android .apk package directly from disk.", "Sideload .APK", ["sh", "-c", "FILE=$(zenity --file-selection --file-filter='*.apk' 2>/dev/null) && waydroid app install \"$FILE\""]),
+            ("🔐 GMS & MicroG Bridge", "Sign-in & Play Services container configuration.", "Init Waydroid GMS", ["gnome-terminal", "--", "bash", "-c", "echo 'Run: sudo waydroid init -s GAPPS'; read"]),
+        ])
+        notebook.append_page(tab2, Gtk.Label(label="📱 Android & GMS"))
+
+        # Tab 3: Gaming & Developer
+        tab3 = self._build_grid([
+            ("🎮 Wine / Proton Gaming", "DirectX to Vulkan (DXVK) gaming & .exe runner.", "Launch Game / .EXE", ["bash", "/usr/local/bin/aether-windows-runner.sh"]),
+            ("💻 PowerShell & Bash", "Modern developer terminal with Git, Python 3 & APT.", "Open Terminal", ["gnome-terminal"]),
+            ("🎛️ Control Center", "Toggle Game Mode, Dev Mode, Wi-Fi & Adaptive UI.", "Open Control Center", ["python3", "/usr/local/bin/aether-control-center.py"]),
+            ("⚙️ System Settings", "Display, Network, Themes, About AetherOS 1.0.", "Open Settings", ["python3", "/usr/local/bin/satasos-settings.py"]),
+        ])
+        notebook.append_page(tab3, Gtk.Label(label="🎮 Gaming & Dev"))
+
+        GLib.timeout_add_seconds(3, self.refresh_ram)
+
+    def _build_grid(self, items):
+        grid = Gtk.Grid(row_spacing=12, column_spacing=12, column_homogeneous=True)
+        grid.set_margin_top(12)
+        grid.set_margin_bottom(8)
+        grid.set_margin_start(4)
+        grid.set_margin_end(4)
+        for idx, (ctitle, cdesc, cbtn, cmd) in enumerate(items):
             box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
             box.add_css_class("hub-card")
             lbl_t = Gtk.Label(xalign=0)
@@ -130,9 +166,7 @@ class UniversalHubWindow(Gtk.ApplicationWindow):
             box.append(lbl_d)
             box.append(btn)
             grid.attach(box, idx % 3, idx // 3, 1, 1)
-
-        root.append(grid)
-        GLib.timeout_add_seconds(3, self.refresh_ram)
+        return grid
 
     def refresh_ram(self):
         self.ram_lbl.set_text(get_ram_summary())

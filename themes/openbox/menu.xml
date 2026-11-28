@@ -11,6 +11,11 @@
         <command>python3 /usr/local/bin/aether-playstore.py</command>
       </action>
     </item>
+    <item label="🎛️ AetherOS Control Center">
+      <action name="Execute">
+        <command>python3 /usr/local/bin/aether-control-center.py</command>
+      </action>
+    </item>
     <item label="🚀 Install AetherOS 1.0">
       <action name="Execute">
         <command>sudo -E calamares</command>
